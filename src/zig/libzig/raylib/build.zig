@@ -20,7 +20,7 @@ pub fn build(b: *std.Build) void {
         .link_libc = true,
     });
     const raylib_win   = "../../../../../libs/win/raylib";
-    const raylib_linux = "../../../../../libs/win/raylib";
+    const raylib_linux = "../../../../../libs/linux/raylib";
     switch (builtin.target.os.tag) {
         .windows => step.addIncludePath(b.path(raylib_win   ++ "/include")),
         .linux =>   step.addIncludePath(b.path(raylib_linux ++ "/include")),

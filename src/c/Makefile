@@ -6,12 +6,19 @@ CC = gcc
 
 CFLAGS += -O2
 
-STATIC_LINK_RAYLIB = true
-
-ifeq ($(STATIC_LINK_RAYLIB),true)
-	LIB_RAYLIB = -lraylib
+ifeq ($(OS),Windows_NT)
+	EXE = .exe
+	PLATFORM = win
+	STATIC_LINK_RAYLIB = true
+	ifeq ($(STATIC_LINK_RAYLIB),true)
+		LIB_RAYLIB = -lraylib
+		LDFLAGS += -static
+	else
+		LIB_RAYLIB = -lraylibdll
+	endif
 else
-	LIB_RAYLIB = -lraylibdll
+	PLATFORM = linux
+	LIB_RAYLIB = -lraylib
 endif
 
 LIBS_DIR = ../../../libs
@@ -20,18 +27,9 @@ LDFLAGS += -L$(LIBS_DIR)/$(PLATFORM)/raylib/lib
 # Strip debug info
 LDFLAGS += -Wl,-s
 
-ifeq ($(STATIC_LINK_RAYLIB),true)
-	LDFLAGS += -static
-endif
-
 ifeq ($(OS),Windows_NT)
-	EXE = .exe
-	# Hide conlosle
-	#LDFLAGS += -mwindows
 	LDFLAGS += $(LIB_RAYLIB) -lopengl32 -lgdi32 -lwinmm
-	PLATFORM = win
 else
-	PLATFORM = linux
 	LDFLAGS += $(LIB_RAYLIB)
 endif
 
@@ -48,7 +46,7 @@ endif
 endif
 
 run: all
-	./$(TARGET)$(EXE)
+	LD_LIBRARY_PATH=$(LIBS_DIR)/$(PLATFORM)/raylib/lib ./$(TARGET)$(EXE)
 
 clean:
 	@-rm -f $(TARGET)$(EXE)

@@ -6,15 +6,15 @@
   - [Download Raylib library [Only for C, Nimony, Nelua, Zig]](#download-raylib-library-only-for-c-nimony-nelua-zig)
   - [Programs](#programs)
     - [C](#c)
+    - [Nelua](#nelua)
     - [Nim](#nim)
     - [Nimony v0.2](#nimony-v02)
-    - [Nelua](#nelua)
+    - [Odin](#odin)
+    - [Python](#python)
     - [Ruby](#ruby)
     - [Zig](#zig)
-    - [Python](#python)
     - [LuaJIT (WIP)](#luajit-wip)
     - [C3 (WIP)](#c3-wip)
-    - [Odin (WIP)](#odin-wip)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +27,7 @@
 
 ---
 
-Install `gcc, make, MSys console / commands(cp, rm ...)`
+Install `gcc, make, MSys2 console / commands(cp, rm ...)`
 
 #### Download Raylib library [Only for C, Nimony, Nelua, Zig]
 
@@ -87,6 +87,8 @@ pwd
 raywars/src/c
 ```
 
+Use gcc compiler 
+
 - Windows
 
    ```sh
@@ -97,45 +99,6 @@ raywars/src/c
 
    ```sh
    LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
-   ```
-
-#####  Nim 
-
----
-
-Install [Nim-lang](https://nim-lang.org)
-
-Windows / Linux
-
-```sh
-pwd 
-raywars/src/nim
-
-nimble install naylib
-make run
-```
-
-#####  Nimony v0.2
-
----
-[Nimony v0.2 (with Raylib sample)](https://nim-lang.github.io/nimony-website/version0_2.html) : [Manual](https://nim-lang.github.io/nimony-website/manual.html) /  [Github](https://github.com/nim-lang/nimony)
-
-```sh
-pwd 
-raywars/src/nimony
-```
-
-- Windows  
-It should be built on MSys2 console,
-   
-   ```sh
-   make nim
-   ```
-
-- Linux
-
-   ```sh
-   LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make nim
    ```
 
 #####  Nelua 
@@ -164,7 +127,7 @@ It should be built on MSys2 console,
       |       snip
       | 
       `-- libs
-          |-- Raylib.nelua   <==
+          |-- Raylib.nelua   <== For Nelua
           |-- win
           |   `-- raylib
           `-- linux
@@ -178,6 +141,8 @@ It should be built on MSys2 console,
    raywars/src/nelua
    ```
 
+   Use gcc compiler 
+
    - Windows  
    It should be built on MSys2 console,
    
@@ -190,6 +155,116 @@ It should be built on MSys2 console,
       ```sh
       LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
       ```
+
+#####  Nim 
+
+---
+
+Install [Nim-lang](https://nim-lang.org)
+
+Use gcc compiler 
+
+Windows: / Linux  
+
+```sh
+pwd 
+raywars/src/nim
+
+nimble install naylib
+make run
+```
+
+#####  Nimony v0.2
+
+---
+[Nimony v0.2 (with Raylib sample)](https://nim-lang.github.io/nimony-website/version0_2.html) : [Manual](https://nim-lang.github.io/nimony-website/manual.html) /  [Github](https://github.com/nim-lang/nimony)
+
+```sh
+pwd 
+raywars/src/nimony
+```
+
+Use gcc compiler 
+
+- Windows  
+It should be built on MSys2 console,
+   
+   ```sh
+   make nim
+   ```
+
+- Linux
+
+   ```sh
+   LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make nim
+   ```
+
+
+#####  Odin
+
+---
+
+[Install Odin](https://odin-lang.org/docs/install/)  
+Using [odin version dev-2025-11 (-nightly:e5153a9)](https://github.com/odin-lang/Odin/releases)
+
+- For Windows OS
+   1. Download [raylib-5.5_win64_msvc16.zip](https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_win64_msvc16.zip) then extracts it.
+   1. Rename `raylib-5.5_win64_msvc16` folder to `raylib_msvc`  
+   1. Copy raylib to `libs` folder  
+      
+      ```sh
+      pwd
+      your_work_dir
+      mkdir -p          libs/win
+      cp -r raylib_msvc libs/win/  
+      ```
+      
+   1. Folder structure:
+     
+        ```sh
+        your_work_dir
+         |-- raywars
+         |   `-- src
+         |       |-- c
+         |       |-- c3
+         |       snip
+         | 
+         `-- libs
+             |-- win
+             |   |-- raylib    
+             |   `-- raylib_msvc    <== for Odin
+             `-- linux
+                 `-- raylib   
+        ```
+
+#####  Python 
+
+---
+- Windows  
+Python 3.14.0
+- Linux: Debian / Ubuntu
+
+   Python 3.13.5
+
+   ```sh
+   sudo apt install python3-pip
+   ```
+
+```sh
+pip install raylib==5.5.0.3 --break-system-packages
+```
+
+(https://github.com/electronstudio/raylib-python-cffi)
+
+```sh
+pwd 
+raywars/src/python
+
+python raywars.py
+or
+python3 raywars.py
+```
+
 #####  Ruby 
 
 ---
@@ -228,22 +303,6 @@ raywars/src/zig
    LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
    ```
 
-#####  Python 
-
----
-
-```sh
-pip3 install raylib==5.5.0.3 --break-system-packages
-```
-
-(https://github.com/electronstudio/raylib-python-cffi)
-
-```sh
-pwd 
-raywars/src/python
-
-python raywars.py
-```
 
 #####  LuaJIT (WIP)
 
@@ -253,9 +312,5 @@ raywars.lua
 
 
 #####  C3 (WIP)
-
----
-
-#####  Odin (WIP)
 
 ---

@@ -2,45 +2,37 @@ TARGET = raywars
 
 ifeq ($(OS),Windows_NT)
 	EXE = .exe
-  OPT += --passL:"-static -L ../../../libs/win/raylib/lib -lraylib -lopengl32 -lgdi32 -lwinmm"
+  OPT_LIBS += --passL:"-static -lraylib -lopengl32 -lgdi32 -lwinmm"
 	PLATFORM = win
 else
-  OPT += --passL:"-L ../../../libs/linux/raylib/lib -lraylib"
+  OPT_LIBS += --passL:"-lraylib"
 	PLATFORM = linux
 endif
 
+LIBS_DIR = ../../../libs
+
+OPT += --passL:"-L $(LIBS_DIR)/$(PLATFORM)/raylib/lib" $(OPT_LIBS)
 OPT += -d:strip
-#OPT += --verbosity:3
-#OPT += --nimcache:.nimcache
+# Silent warning
+OPT += --passC:"-Wno-attributes"
 
-all:
-	@echo --- Usage ---
-ifeq ($(PLATFORM),win)
-	@echo -------------------------
-	@echo ! Build on MSys console !
-	@echo -------------------------
-endif
-	@echo make nim          --- Compile with Nimony
-	@echo make nim NIM=nim --- Compile with Nim
+.PHONY: nimony nim run clean gen
 
-NIM ?= nimony
+all: nimony
 
-ifeq ($(NIM),nim)
-	OPT += -d:nim_compiler
-endif
-
-$(TARGET)$(EXE):
-	$(NIM) c -r $(OPT) $<
+nimony:
+	$@ c $(OPT) $(TARGET).nim
+	@-strip ./nimcache/$(TARGET)$(EXE)
 
 nim:
-	$(NIM) c -r $(OPT) $(TARGET).nim
+	$@ c -d:nim_compiler --nimcache:.nimcache $(OPT) $(TARGET).nim
 
 clean:
 	@-rm -fr .nimcache nimcache .nimcache_gen
 	@-rm -f $(TARGET)$(EXE)
 
 run: all
-	./$(TARGET)$(EXE)
+	LD_LIBRARY_PATH=$(LIBS_DIR)/$(PLATFORM)/raylib/lib ./nimcache/$(TARGET)$(EXE)
 
 GEN_OPT += -d:useFuthark -d:futharkRebuild --maxLoopIterationsVM:50000000
 GEN_OPT += --hint:"User:off"
@@ -48,5 +40,3 @@ GEN_OPT += -d:nodeclguards
 
 gen:
 	nim c -f -c  $(GEN_OPT) --nimcache:.nimcache_$(notdir $@) raylib.nim
-
-nim:

@@ -1,6 +1,7 @@
 OPT += --release=fast
 
 all:
+	zig version
 	zig build $(OPT)
 
 run:
