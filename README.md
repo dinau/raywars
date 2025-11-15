@@ -87,18 +87,11 @@ pwd
 raywars/src/c
 ```
 
+Windows / Linux  
 Use gcc compiler 
-
-- Windows
 
    ```sh
    make run
-   ```
-
-- Linux
-
-   ```sh
-   LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
    ```
 
 #####  Nelua 
@@ -141,20 +134,15 @@ Use gcc compiler
    raywars/src/nelua
    ```
 
+   Windows / Linux  
    Use gcc compiler 
 
-   - Windows  
-   It should be built on MSys2 console,
+   (It should be built on MSys2 console on Windows)
    
       ```sh
       make run
       ```
    
-   - Linux
-   
-      ```sh
-      LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
-      ```
 
 #####  Nim 
 
@@ -162,9 +150,8 @@ Use gcc compiler
 
 Install [Nim-lang](https://nim-lang.org)
 
-Use gcc compiler 
-
 Windows: / Linux  
+Use gcc compiler 
 
 ```sh
 pwd 
@@ -184,21 +171,14 @@ pwd
 raywars/src/nimony
 ```
 
+Windows: / Linux  
 Use gcc compiler 
 
-- Windows  
-It should be built on MSys2 console,
+(It should be built on MSys2 console on Windows)
    
    ```sh
    make nim
    ```
-
-- Linux
-
-   ```sh
-   LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make nim
-   ```
-
 
 #####  Odin
 
@@ -237,14 +217,18 @@ Using [odin version dev-2025-11 (-nightly:e5153a9)](https://github.com/odin-lang
                  `-- raylib   
         ```
 
+Windows / Linux
+
+```sh
+make run
+```
+
+
 #####  Python 
 
 ---
-- Windows  
-Python 3.14.0
-- Linux: Debian / Ubuntu
-
-   Python 3.13.5
+- Windows :  Python 3.14.0
+- Linux: Debian / Ubuntu : Python 3.13.5
 
    ```sh
    sudo apt install python3-pip
@@ -291,18 +275,11 @@ pwd
 raywars/src/zig
 ```
 
-- Windows
+- Windows / Linux
 
    ```sh
    make run
    ```
-
-- Linux
-
-   ```sh
-   LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
-   ```
-
 
 #####  LuaJIT (WIP)
 
