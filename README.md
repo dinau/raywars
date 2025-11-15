@@ -10,6 +10,7 @@
     - [Nim](#nim)
     - [Nimony v0.2](#nimony-v02)
     - [Odin](#odin)
+    - [Lazarus / Pascal](#lazarus--pascal)
     - [Python](#python)
     - [Ruby](#ruby)
     - [Zig](#zig)
@@ -223,6 +224,15 @@ Windows / Linux
 make run
 ```
 
+#####  Lazarus / Pascal 
+
+---
+
+Prerequisites:  
+[Lazarus IDE](https://www.lazarus-ide.org/) and FPC 3.3.1 or newer  
+[ray4laz package](https://github.com/GuvaCode/ray4laz) installed in Lazarus  
+
+Thank you for P.R. [@GuvaCode](https://github.com/GuvaCode).
 
 #####  Python 
 
