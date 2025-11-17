@@ -1,3 +1,4 @@
+*.c3l
 err.txt
 .neluacache/
 futhark/

@@ -6,6 +6,8 @@
   - [Download Raylib library [Only for C, Nimony, Nelua, Zig]](#download-raylib-library-only-for-c-nimony-nelua-zig)
   - [Programs](#programs)
     - [C](#c)
+    - [C3](#c3)
+    - [Go](#go)
     - [Nelua](#nelua)
     - [Nim](#nim)
     - [Nimony v0.2](#nimony-v02)
@@ -14,13 +16,13 @@
     - [Python](#python)
     - [Ruby](#ruby)
     - [Zig](#zig)
-    - [LuaJIT (WIP)](#luajit-wip)
-    - [C3 (WIP)](#c3-wip)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### RayWars : Star Wars-style opening crawl example program with Raylib
 
+
+**"May the Raylib be with you."**
 
 ![alt](img/raywars_v0.2.gif)
 
@@ -67,7 +69,7 @@ then extracts it.
       |-- raywars
       |   `-- src
       |       |-- c
-      |       |-- luajit
+      |       |-- c3
       |       snip
       | 
       `-- libs
@@ -79,7 +81,7 @@ then extracts it.
 
 #### Programs
 
-##### C  
+##### C
 
 ---
 
@@ -94,6 +96,44 @@ Use gcc compiler
    ```sh
    make run
    ```
+
+#####  C3 
+
+---
+
+[Install C3lang](https://c3-lang.org/getting-started/prebuilt-binaries/)
+
+
+Windows / Linux
+
+```sh
+pwd
+raywars/src/c3
+
+c3c vendor-fetch raylib
+make run
+```
+
+- https://github.com/tekin-tontu/c3-raylib-examples
+- https://github.com/pherrymason/c3-lsp
+- https://c3-lang.org/language-overview/examples/
+
+##### Go
+
+---
+
+go 1.25.4
+
+```sh
+pwd 
+raywars/src/go
+```
+
+windows
+
+```sh
+make run
+```
 
 #####  Nelua 
 
@@ -254,15 +294,14 @@ pip install raylib==5.5.0.3 --break-system-packages
 pwd 
 raywars/src/python
 
-python raywars.py
-or
-python3 raywars.py
+python raywars.py      # or python3 raywars.py
 ```
 
 #####  Ruby 
 
 ---
-For Windows install [Ruby installer](https://rubyinstaller.org/downloads/):  Ruby 3.4.7 
+For Windows install [Ruby installer](https://rubyinstaller.org/downloads/):  Ruby 3.4.7  
+Linux: Ruby 3.3.8 
 
 ```sh
 pwd 
@@ -285,19 +324,8 @@ pwd
 raywars/src/zig
 ```
 
-- Windows / Linux
+Windows / Linux
 
    ```sh
    make run
    ```
-
-#####  LuaJIT (WIP)
-
----
-
-raywars.lua
-
-
-#####  C3 (WIP)
-
----
