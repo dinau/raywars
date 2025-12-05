@@ -2,13 +2,15 @@ package main
 
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"os"
+	"strings"
 )
 
 const (
 	SCREEN_WIDTH    = 800
 	SCREEN_HEIGHT   = 400
 	BASE_FONT_SIZE  = 60.0
-	SCROLL_SPEED    = 0.5
+	SCROLL_SPEED    = 0.47
 	STAR_COUNT      = 100
 )
 
@@ -16,8 +18,6 @@ func main() {
 	rl.SetConfigFlags(rl.FlagMsaa4xHint)
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Go,   <SPACE>:Start / Stop, <R>:Restart")
 	defer rl.CloseWindow()
-
-	rl.SetTargetFPS(60)
 
 	// Generate random stars
 	stars := make([]rl.Vector2, STAR_COUNT)
@@ -33,32 +33,16 @@ func main() {
 	}
 
 	// Text lines
-	textLines := []string{
-		"Epic I",
-		"THE CODING ADVENTURE",
-		"",
-		"",
-		"In a galaxy powered by code,",
-		"brave programmers unite to",
-		"build incredible software",
-		"that brings joy to users",
-		"across the digital realm.",
-		"",
-		"Armed with keyboards and",
-		"determination, these heroes",
-		"debug complex systems and",
-		"craft elegant solutions to",
-		"seemingly impossible",
-		"technical challenges.",
-		"",
-		"Now, a new generation of",
-		"developers embarks on an",
-		"epic quest to master the",
-		"ancient art of programming,",
-		"seeking to create applications",
-		"that will shape the future",
-		"of technology forever....",
-		"",
+	data, err := os.ReadFile("../../resources/message.txt")
+	if err != nil {
+			panic(err)
+	}
+	rawLines := strings.Split(string(data), "\n")
+  textLines := make([]string, 0, len(rawLines))
+	for _, line := range rawLines {
+		line = strings.TrimRight(line, "\r\n")
+		// line = strings.TrimSpace(line)
+		textLines = append(textLines, line)
 	}
 
 	textCount := len(textLines)
@@ -113,7 +97,17 @@ func main() {
 	var scrollOffset float32 = 0.0
 	var paused bool = false
 
+	rl.SetTargetFPS(60)
+	rl.InitAudioDevice()
+	//rl.SetMasterVolume(1.0)
+	const bgm_name= "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+	bgm := rl.LoadMusicStream(bgm_name)
+	const BGM_START_POS = 16.0
+	rl.SeekMusicStream(bgm, BGM_START_POS)
+	rl.PlayMusicStream(bgm)
+
 	for !rl.WindowShouldClose() {
+		rl.UpdateMusicStream(bgm)
 		// Check for space key (pause/resume)
 		if rl.IsKeyPressed(rl.KeySpace) {
 			paused = !paused
@@ -123,17 +117,18 @@ func main() {
 		if rl.IsKeyPressed(rl.KeyR) {
 			scrollOffset = 0.0
 			paused = false
+			rl.SeekMusicStream(bgm, BGM_START_POS)
 		}
-
 		// Update scroll position (only if not paused)
 		if !paused {
 			scrollOffset += SCROLL_SPEED * rl.GetFrameTime()
+			rl.ResumeMusicStream(bgm)
+		}else{
+			rl.PauseMusicStream(bgm)
 		}
-
 		if scrollOffset > float32(textCount)*0.8+10.0 {
 			scrollOffset = 0.0
 		}
-
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
 

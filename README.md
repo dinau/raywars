@@ -16,6 +16,7 @@
     - [Python](#python)
     - [Ruby](#ruby)
     - [Zig](#zig)
+  - [Credit](#credit)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -48,7 +49,7 @@ then extracts it.
 1. Rename `raylib-5.5_win64_mingw-w64` to `raylib`  
  (for Linux: rename `raylib-5.5_linux_amd64` to `raylib`)
 1. Copy raylib  
-   - Windows:
+   - Windows
    
       ```sh
       mkdir -p     libs/win
@@ -101,6 +102,8 @@ Use gcc compiler
 
 ---
 
+C3 Compiler Version:       0.7.7
+
 [Install C3lang](https://c3-lang.org/getting-started/prebuilt-binaries/)
 
 
@@ -110,19 +113,20 @@ Windows / Linux
 pwd
 raywars/src/c3
 
-c3c vendor-fetch raylib
+c3c vendor-fetch raylib55
 make run
 ```
 
 - https://github.com/tekin-tontu/c3-raylib-examples
 - https://github.com/pherrymason/c3-lsp
 - https://c3-lang.org/language-overview/examples/
+- https://github.com/c3lang/vendor/tree/main/libraries
 
 ##### Go
 
 ---
 
-go 1.25.4
+go 1.25.5
 
 ```sh
 pwd 
@@ -191,7 +195,7 @@ make run
 
 Install [Nim-lang](https://nim-lang.org)
 
-Windows: / Linux  
+Windows / Linux  
 Use gcc compiler 
 
 ```sh
@@ -212,7 +216,7 @@ pwd
 raywars/src/nimony
 ```
 
-Windows: / Linux  
+Windows / Linux  
 Use gcc compiler 
 
 (It should be built on MSys2 console on Windows)
@@ -328,4 +332,19 @@ Windows / Linux
 
    ```sh
    make run
+   ```
+
+#### Credit
+
+---
+
+- Music  
+./resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30
+
+   ```sh
+   "Also sprach Zarathustra, Op.30"
+   Provided by Classicals.de
+   Conducted by Philip Milman (https://pmmusic.pro/)
+   Licensed under CC BY 3.0
+   https://www.classicals.de
    ```

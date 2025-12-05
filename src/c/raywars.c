@@ -11,35 +11,71 @@ int main(void) {
   InitWindow(screenWidth, screenHeight, "Ray Wars Opening Crawl in C,   <SPACE>:Start / Stop, <R>:Restart");
 
   // Text content
-  const char *text[] = {"Epic I",
-                        "THE CODING ADVENTURE",
-                        "",
-                        "",
-                        "In a galaxy powered by code,",
-                        "brave programmers unite to",
-                        "build incredible software",
-                        "that brings joy to users",
-                        "across the digital realm.",
-                        "",
-                        "Armed with keyboards and",
-                        "determination, these heroes",
-                        "debug complex systems and",
-                        "craft elegant solutions to",
-                        "seemingly impossible",
-                        "technical challenges.",
-                        "",
-                        "Now, a new generation of",
-                        "developers embarks on an",
-                        "epic quest to master the",
-                        "ancient art of programming,",
-                        "seeking to create applications",
-                        "that will shape the future",
-                        "of technology forever....",
-                        ""};
+  const char *text[] = {
+        "Epic I",
+        "MAY THE RAYLIB BE WITH YOU",
+        "",
+        "",
+        "In a galaxy powered by code,",
+        "brave programmers unite to",
+        "build incredible software",
+        "that brings joy to users",
+        "across the digital realm.",
+        "",
+        "Armed with keyboards and",
+        "determination, these heroes",
+        "debug complex systems and",
+        "craft elegant solutions to",
+        "seemingly impossible",
+        "technical challenges.",
+        "",
+        "Now, a new generation of",
+        "developers embarks on an",
+        "epic quest to master the",
+        "ancient art of programming,",
+        "seeking to create applications",
+        "that will shape the future",
+        "of technology forever....",
+        "",
+        "CLASSICALS.DE",
+        "If you use this track",
+        "in a project, please credit:",
+        "www.classicals.de",
+        "Licensing Information:",
+        "Conducted by Philip Milman:",
+        "https://pmmusic.pro/",
+        "Creative Commons",
+        "Attribution 3.0 Unported",
+        "CC BY 3.0",
+        "You are free to:",
+        "Share copy and redistribute",
+        "the material in any medium",
+        "or format Adapt",
+        "remix, transform, and",
+        "build upon the material",
+        "Under the following terms:",
+        "Attribution You must give",
+        "appropriate credit, provide",
+        "a link to the website, and",
+        "indicate if changes were made.",
+        "You may do so",
+        "in any reasonable manner, but",
+        "not in any way that suggests",
+        "the licensor endorses you",
+        "or your use.",
+        "No additional restrictions",
+        "You may not apply legal terms",
+        "or technological measures",
+        "that legally restrict others",
+        "from doing anything",
+        "the license permits.",
+        "Classicals.de @2025",
+        "www.classicals.de",
+  };
 
   int textCount = sizeof(text) / sizeof(text[0]);
   float scrollOffset = 0;
-  float scrollSpeed = 0.5f;
+  float scrollSpeed = 0.47;
   bool paused = false;
 
   // Generate random star positions
@@ -86,7 +122,16 @@ int main(void) {
 
   SetTargetFPS(60);
 
+  InitAudioDevice();
+  //SetMasterVolume(1.0);
+  const char * bgm_name= "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
+  Music bgm = LoadMusicStream(bgm_name);
+  const float BGM_START_POS = 16.0;
+  SeekMusicStream(bgm, BGM_START_POS);
+  PlayMusicStream(bgm);
+
   while (!WindowShouldClose()) {
+    UpdateMusicStream(bgm);
 
     // Check for space key (pause/resume)
     if (IsKeyPressed(KEY_SPACE)) {
@@ -97,10 +142,14 @@ int main(void) {
     if (IsKeyPressed(KEY_R)) {
       scrollOffset = 0.0;
       paused = false;
+      SeekMusicStream(bgm, BGM_START_POS);
     }
     // Update scroll position (only if not paused)
     if (!paused) {
       scrollOffset += scrollSpeed * GetFrameTime();
+      ResumeMusicStream(bgm);
+    } else {
+      PauseMusicStream(bgm);
     }
 
     // Reset when all lines have scrolled past

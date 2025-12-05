@@ -1,7 +1,12 @@
 TARGET = raywars
 
+HIDE_CONSOLE = true
+
 ifeq ($(OS),Windows_NT)
 	EXE = .exe
+	ifeq ($(HIDE_CONSOLE),true)
+		OPT += --passL:"-mwindows"
+	endif
 endif
 
 OPT += -d:strip

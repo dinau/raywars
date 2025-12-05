@@ -4,11 +4,15 @@ CC = gcc
 #CC = zig cc
 #CC = clang
 
-CFLAGS += -O2
+CFLAGS += -O0
+
+LIBS_DIR = ../../../libs
+
+HIDE_CONSOLE = true
 
 ifeq ($(OS),Windows_NT)
 	EXE = .exe
-	PLATFORM = win
+	PLATFORM = windows
 	STATIC_LINK_RAYLIB = true
 	ifeq ($(STATIC_LINK_RAYLIB),true)
 		LIB_RAYLIB = -lraylib
@@ -16,12 +20,14 @@ ifeq ($(OS),Windows_NT)
 	else
 		LIB_RAYLIB = -lraylibdll
 	endif
+	ifeq ($(HIDE_CONSOLE),true)
+		LDFLAGS += -mwindows
+	endif
 else
 	PLATFORM = linux
 	LIB_RAYLIB = -lraylib
 endif
 
-LIBS_DIR = ../../../libs
 LDFLAGS += -L$(LIBS_DIR)/$(PLATFORM)/raylib/lib
 
 # Strip debug info
@@ -40,8 +46,8 @@ all: $(TARGET)$(EXE)
 $(TARGET)$(EXE): $(TARGET).c Makefile
 	$(CC) $(CFLAGS) $(TARGET).c -o $(TARGET)$(EXE) $(LDFLAGS)
 ifneq ($(STATIC_LINK_RAYLIB),true)
-ifeq ($(PLATFORM),win)
-	cp -f $(LIBS_DIR)/win/raylib/lib/raylib.dll .
+ifeq ($(PLATFORM),windows)
+	cp -f $(LIBS_DIR)/$(PLATFORM)/raylib/lib/raylib.dll .
 endif
 endif
 
@@ -50,7 +56,7 @@ run: all
 
 clean:
 	@-rm -f $(TARGET)$(EXE)
-ifeq ($(PLATFORM),win)
+ifeq ($(PLATFORM),windows)
 	@-rm -f raylib.dll
 endif
 

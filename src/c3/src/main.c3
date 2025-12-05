@@ -1,5 +1,5 @@
 module raywars;
-import raylib;
+import raylib5::rl;
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 400;
@@ -23,21 +23,21 @@ const int RL_QUADS = 7;
 
 fn int main(String[] args)
 {
-    raylib::set_config_flags(0x00000020); // FLAG_MSAA_4X_HINT
-    raylib::init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in C3,   <SPACE>:Start / Stop, <R>:Restart");
-    raylib::set_target_fps(60);
+    rl::setConfigFlags(ConfigFlag.MSAA_4X_HINT); // FLAG_MSAA_4X_HINT
+    rl::initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in C3,   <SPACE>:Start / Stop, <R>:Restart");
+    rl::setTargetFPS(60);
 
     // Generate random stars
-    raylib::Vector2[STAR_COUNT] stars;
+    rl::Vector2[STAR_COUNT] stars;
     float[STAR_COUNT] star_sizes;
 
     for (int i = 0; i < STAR_COUNT; i++)
     {
-        int rx = raylib::get_random_value(0, SCREEN_WIDTH);
-        int ry = raylib::get_random_value(0, SCREEN_HEIGHT);
+        int rx = rl::getRandomValue(0, SCREEN_WIDTH);
+        int ry = rl::getRandomValue(0, SCREEN_HEIGHT);
         stars[i].x = (float)rx;
         stars[i].y = (float)ry;
-        int rs = raylib::get_random_value(5, 10);
+        int rs = rl::getRandomValue(5, 10);
         star_sizes[i] = (float)rs / 10.0;
     }
 
@@ -71,7 +71,7 @@ fn int main(String[] args)
     };
 
     int text_count = text_lines.len;
-    raylib::RenderTexture2D[25] text_textures;
+    rl::RenderTexture2D[25] text_textures;
 
     for (int i = 0; i < text_count; i++)
     {
@@ -86,7 +86,7 @@ fn int main(String[] args)
         }
 
         float font_size = (i == 0) ? BASE_FONT_SIZE * 2 : BASE_FONT_SIZE;
-        int text_width = raylib::measure_text((char*)line.ptr, (int)font_size);
+        int text_width = rl::measureText((ZString)line.ptr, (int)font_size);
         int text_height = (int)(font_size + 10);
 
         if (text_width <= 0 || text_height <= 0)
@@ -97,38 +97,38 @@ fn int main(String[] args)
             continue;
         }
 
-        raylib::RenderTexture2D tex = raylib::load_render_texture(text_width, text_height);
-        raylib::begin_texture_mode(tex);
-        raylib::clear_background(raylib::BLANK);
+        rl::RenderTexture2D tex = rl::loadRenderTexture(text_width, text_height);
+        rl::beginTextureMode(tex);
+        rl::clearBackground(rl::BLANK);
 
-        raylib::Color color = (i == 0 || i == 1) ? raylib::YELLOW : (raylib::Color){ 255, 232, 31, 255 };
+        rl::Color color = (i == 0 || i == 1) ? rl::YELLOW : (rl::Color){ 255, 232, 31, 255 };
 
-        raylib::draw_text((char*)line.ptr, 0, 0, (int)font_size, color);
-        raylib::end_texture_mode();
-        raylib::set_texture_filter(tex.texture, raylib::TextureFilter.BILINEAR);
+        rl::drawText((ZString)line.ptr, 0, 0, (int)font_size, color);
+        rl::endTextureMode();
+        rl::setTextureFilter(tex.texture, rl::TextureFilter.BILINEAR);
         text_textures[i] = tex;
     }
 
-    raylib::Camera3D camera;
-    camera.position = (raylib::Vector3){ 0.0, 0.0, 0.0 };
-    camera.target = (raylib::Vector3){ 0.0, 0.0, -1.0 };
-    camera.up = (raylib::Vector3){ 0.0, 1.0, 0.0 };
+    rl::Camera3D camera;
+    camera.position = (rl::Vector3){ 0.0, 0.0, 0.0 };
+    camera.target = (rl::Vector3){ 0.0, 0.0, -1.0 };
+    camera.up = (rl::Vector3){ 0.0, 1.0, 0.0 };
     camera.fovy = 45.0;
-    camera.projection = raylib::CameraProjection.PERSPECTIVE.ordinal;
+    camera.projection = CameraProjection.PERSPECTIVE;
 
     float scroll_offset = 0.0;
     bool paused = false;
 
-    while (!raylib::window_should_close())
+    while (!rl::windowShouldClose())
     {
         // Check for space key (pause/resume)
-        if (raylib::is_key_pressed(32)) // KEY_SPACE
+        if (rl::isKeyPressed(32)) // KEY_SPACE
         {
             paused = !paused;
         }
 
         // Check for R key (restart)
-        if (raylib::is_key_pressed(82)) // KEY_R
+        if (rl::isKeyPressed(82)) // KEY_R
         {
             scroll_offset = 0.0;
             paused = false;
@@ -137,7 +137,7 @@ fn int main(String[] args)
         // Update scroll position (only if not paused)
         if (!paused)
         {
-            scroll_offset += SCROLL_SPEED * raylib::get_frame_time();
+            scroll_offset += SCROLL_SPEED * rl::getFrameTime();
         }
 
         if (scroll_offset > (float)text_count * 0.8 + 10.0)
@@ -145,21 +145,21 @@ fn int main(String[] args)
             scroll_offset = 0.0;
         }
 
-        raylib::begin_drawing();
-        raylib::clear_background(raylib::BLACK);
+        rl::beginDrawing();
+        rl::clearBackground(rl::BLACK);
 
         // Draw stars
         for (int i = 0; i < STAR_COUNT; i++)
         {
-            raylib::draw_circle(
+            rl::drawCircle(
                 (int)stars[i].x,
                 (int)stars[i].y,
                 star_sizes[i],
-                raylib::WHITE
+                rl::WHITE
             );
         }
 
-        raylib::begin_mode3d(camera);
+        rl::beginMode3D(camera);
 
         for (int i = 0; i < text_count; i++)
         {
@@ -212,8 +212,8 @@ fn int main(String[] args)
             }
         }
 
-        raylib::end_mode3d();
-        raylib::end_drawing();
+        rl::endMode3D();
+        rl::endDrawing();
     }
 
     // Unload textures
@@ -221,10 +221,10 @@ fn int main(String[] args)
     {
         if (text_textures[i].id != 0)
         {
-            raylib::unload_render_texture(text_textures[i]);
+            rl::unloadRenderTexture(text_textures[i]);
         }
     }
 
-    raylib::close_window();
+    rl::closeWindow();
     return 0;
 }

@@ -1,9 +1,14 @@
 TARGET = raywars
 
+HIDE_CONSOLE = true
+
 ifeq ($(OS),Windows_NT)
 	EXE = .exe
   OPT_LIBS += --passL:"-static -lraylib -lopengl32 -lgdi32 -lwinmm"
-	PLATFORM = win
+	ifeq ($(HIDE_CONSOLE),true)
+		OPT += --passL:"-mwindows"
+	endif
+	PLATFORM = windows
 else
   OPT_LIBS += --passL:"-lraylib"
 	PLATFORM = linux

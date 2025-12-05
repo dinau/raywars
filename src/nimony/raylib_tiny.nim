@@ -72,6 +72,24 @@ type
     recs*: ptr Rectangle
     glyphs*: ptr GlyphInfo
   Font* = struct_Font
+  struct_rAudioBuffer* = object
+  struct_rAudioProcessor* = object
+  rAudioBuffer* = struct_rAudioBuffer ## Generated based on C:/000imguin_dev/imguinz_data/00raywars_data/libs/win/raylib/include/raylib.h:460:29
+  rAudioProcessor* = struct_rAudioProcessor ## Generated based on C:/000imguin_dev/imguinz_data/00raywars_data/libs/win/raylib/include/raylib.h:461:32
+  struct_AudioStream* {.pure, inheritable, bycopy.} = object
+    buffer*: ptr rAudioBuffer ## Generated based on C:/000imguin_dev/imguinz_data/00raywars_data/libs/win/raylib/include/raylib.h:464:16
+    processor*: ptr rAudioProcessor
+    sampleRate*: cuint
+    sampleSize*: cuint
+    channels*: cuint
+  AudioStream* = struct_AudioStream ## Generated based on C:/000imguin_dev/imguinz_data/00raywars_data/libs/win/raylib/include/raylib.h:471:3
+  struct_Music* {.pure, inheritable, bycopy.} = object
+    stream*: AudioStream     ## Generated based on C:/000imguin_dev/imguinz_data/00raywars_data/libs/win/raylib/include/raylib.h:480:16
+    frameCount*: cuint
+    looping*: bool
+    ctxType*: cint
+    ctxData*: pointer
+  Music* = struct_Music      ## Generated based on C:/000imguin_dev/imguinz_data/00raywars_data/libs/win/raylib/include/raylib.h:487:3
 proc setConfigFlags*(flags: cuint): void {.cdecl, importc: "SetConfigFlags".}
 proc initWindow*(width: cint; height: cint; title: cstring): void {.cdecl, importc: "InitWindow".}
 proc setTargetFPS*(fps: cint): void {.cdecl, importc: "SetTargetFPS".}
@@ -106,3 +124,13 @@ proc closeWindow*(): void {.cdecl, importc: "CloseWindow".}
 proc rlBegin*(mode: cint): void {.cdecl, importc: "rlBegin".}
 proc color4f*(x: cfloat; y: cfloat; z: cfloat; w: cfloat): void {.cdecl, importc: "rlColor4f".}
 proc setTexture*(id: cuint): void {.cdecl, importc: "rlSetTexture".}
+
+proc initAudioDevice*(): void {.cdecl, importc: "InitAudioDevice".}
+proc setMasterVolume*(volume: cfloat): void {.cdecl, importc: "SetMasterVolume".}
+proc loadMusicStream*(fileName: cstring): Music {.cdecl, importc: "LoadMusicStream".}
+proc seekMusicStream*(music: Music; position: cfloat): void {.cdecl, importc: "SeekMusicStream".}
+proc resumeMusicStream*(music: Music): void {.cdecl, importc: "ResumeMusicStream".}
+proc pauseAudioStream*(stream: AudioStream): void {.cdecl, importc: "PauseAudioStream".}
+proc playMusicStream*(music: Music): void {.cdecl, importc: "PlayMusicStream".}
+proc updateMusicStream*(music: Music): void {.cdecl, importc: "UpdateMusicStream".}
+proc pauseMusicStream*(music: Music): void {.cdecl, importc: "PauseMusicStream".}

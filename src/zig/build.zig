@@ -22,9 +22,16 @@ pub fn build(b: *std.Build) void {
     exe.root_module.link_libc = true;
 
     // Hide console window
-    //exe.subsystem = .Windows;
+    exe.subsystem = .Windows;
 
     b.installArtifact(exe);
+
+    const res1 = b.addInstallFile(b.path("../../resources/message.txt"), "bin/resources/message.txt");
+    b.getInstallStep().dependOn(&res1.step);
+    const soundName = "Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
+    const res2 = b.addInstallFile(b.path(b.pathJoin(&.{"../../resources/", soundName})), b.pathJoin(&.{"bin/resources/", soundName}));
+    b.getInstallStep().dependOn(&res2.step);
+
 
     // for Dynamic link
     //switch (builtin.target.os.tag) {

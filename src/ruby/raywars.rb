@@ -9,37 +9,14 @@ def main()
   Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Ruby,   <SPACE>:Start / Stop, <R>:Restart")
 
   # Text content
-  text = [
-    "Epic I",
-    "THE CODING ADVENTURE",
-    "",
-    "",
-    "In a galaxy powered by code,",
-    "brave programmers unite to",
-    "build incredible software",
-    "that brings joy to users",
-    "across the digital realm.",
-    "",
-    "Armed with keyboards and",
-    "determination, these heroes",
-    "debug complex systems and",
-    "craft elegant solutions to",
-    "seemingly impossible",
-    "technical challenges.",
-    "",
-    "Now, a new generation of",
-    "developers embarks on an",
-    "epic quest to master the",
-    "ancient art of programming,",
-    "seeking to create applications",
-    "that will shape the future",
-    "of technology forever....",
-    ""
-  ]
+  text = []
+  File.foreach("../../resources/message.txt") do |line|
+    text << line.chomp
+  end
 
   text_count = text.length
   scroll_offset = 0.0
-  scroll_speed = 0.5
+  scroll_speed = 0.46
   paused = false
 
   # Generate random star positions
@@ -86,7 +63,16 @@ def main()
 
   Raylib.SetTargetFPS(60)
 
+  Raylib.InitAudioDevice()
+  #Raylib.SetMasterVolume(1.0)
+  bgm_name = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+  bgm = Raylib.LoadMusicStream(bgm_name)
+  bgm_start_pos = 16.0
+  Raylib.SeekMusicStream(bgm, bgm_start_pos)
+  Raylib.PlayMusicStream(bgm)
+
   until Raylib.WindowShouldClose()
+    Raylib.UpdateMusicStream(bgm)
     # Check for space key (pause/resume)
     if Raylib.IsKeyPressed(Raylib::KEY_SPACE)
       paused = !paused
@@ -96,11 +82,15 @@ def main()
     if Raylib.IsKeyPressed(Raylib::KEY_R)
       scroll_offset = 0.0
       paused = false
+      Raylib.SeekMusicStream(bgm, bgm_start_pos)
     end
 
     # Update scroll position (only if not paused)
     unless paused
       scroll_offset += scroll_speed * Raylib.GetFrameTime()
+      Raylib..ResumeMusicStream(bgm)
+    else
+      Raylib.PauseMusicStream(bgm)
     end
 
     # Reset when all lines have scrolled past

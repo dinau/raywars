@@ -10,6 +10,10 @@ pub fn build(b: *std.Build) void {
     defer allocator.free(current_dir_abs);
     const mod_name = std.fs.path.basename(current_dir_abs);
 
+    const sOS = @tagName(builtin.target.os.tag);
+    const raylib_path = "../../../../../libs/" ++ sOS ++ "/raylib";
+    const static_link = true;
+
     // -----
     // step
     // -----
@@ -19,23 +23,13 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .link_libc = true,
     });
-    const raylib_win   = "../../../../../libs/win/raylib";
-    const raylib_linux = "../../../../../libs/linux/raylib";
-    switch (builtin.target.os.tag) {
-        .windows => step.addIncludePath(b.path(raylib_win   ++ "/include")),
-        .linux =>   step.addIncludePath(b.path(raylib_linux ++ "/include")),
-        else => {},
-    }
+    step.addIncludePath(b.path(raylib_path   ++ "/include"));
 
     // -------
     // module
     // -------
     const mod = step.addModule(mod_name);
-    switch (builtin.target.os.tag) {
-        .windows => mod.addIncludePath(b.path(raylib_win   ++ "/include")),
-        .linux =>   mod.addIncludePath(b.path(raylib_linux ++ "/include")),
-        else => {},
-    }
+    mod.addIncludePath(b.path(raylib_path   ++ "/include"));
     mod.addImport(mod_name, mod);
 
     const lib = b.addLibrary(.{
@@ -45,10 +39,25 @@ pub fn build(b: *std.Build) void {
     });
 
     switch (builtin.target.os.tag) {
-        .windows => lib.addObjectFile(b.path(raylib_win   ++ "/lib/libraylib.a" )),
-        .linux =>   lib.addObjectFile(b.path(raylib_linux ++ "/lib/libraylib.a" )),
+        .windows => {
+            mod.addIncludePath(b.path(raylib_path ++ "/include"));
+            if (static_link){
+                mod.addObjectFile(b.path(raylib_path ++ "/lib/libraylib.a"));
+            }else{
+                mod.addObjectFile(b.path(raylib_path ++ "/lib/libraylibdll.a"));
+            }
+        },
+        .linux => {
+            mod.addIncludePath(b.path(raylib_path ++ "/include"));
+            if (static_link){
+                mod.addObjectFile(b.path(raylib_path ++ "/lib/libraylib.a"));
+            }else{
+                mod.addObjectFile(b.path(raylib_path ++ "/lib/libraylib.so.550"));
+            }
+        },
         else => {},
     }
+
     //---------
     // Linking
     //---------

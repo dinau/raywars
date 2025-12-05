@@ -1,6 +1,8 @@
 package main
 
+import "core:os"
 import "core:fmt"
+import "core:strings"
 import "core:c"
 import rl "vendor:raylib"
 
@@ -38,8 +40,6 @@ main :: proc() {
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Odin,   <SPACE>:Start / Stop, <R>:Restart")
     defer rl.CloseWindow()
 
-    rl.SetTargetFPS(60)
-
     stars: [STAR_COUNT]rl.Vector2
     star_sizes: [STAR_COUNT]f32
 
@@ -54,32 +54,28 @@ main :: proc() {
     }
 
     // Text lines
-    text_lines := []cstring{
-        "Epic I",
-        "THE CODING ADVENTURE",
-        "",
-        "",
-        "In a galaxy powered by code,",
-        "brave programmers unite to",
-        "build incredible software",
-        "that brings joy to users",
-        "across the digital realm.",
-        "",
-        "Armed with keyboards and",
-        "determination, these heroes",
-        "debug complex systems and",
-        "craft elegant solutions to",
-        "seemingly impossible",
-        "technical challenges.",
-        "",
-        "Now, a new generation of",
-        "developers embarks on an",
-        "epic quest to master the",
-        "ancient art of programming,",
-        "seeking to create applications",
-        "that will shape the future",
-        "of technology forever....",
-        "",
+    text_lines := make([dynamic]cstring)
+    defer {
+        for line in text_lines {
+            delete(line)
+        }
+        delete(text_lines)
+    }
+
+    // Read textt file
+    data, ok := os.read_entire_file("../../resources/message.txt")
+    if !ok {
+        fmt.println("Error!: Fail read file")
+        return
+    }
+    defer delete(data)
+
+    content := string(data)
+    lines := strings.split_lines(content)
+    defer delete(lines)
+    for line in lines {
+        line_cstr := strings.clone_to_cstring(line)
+        append(&text_lines, line_cstr)
     }
 
     text_count := len(text_lines)
@@ -124,7 +120,18 @@ main :: proc() {
     scroll_offset: f32 = 0.0
     paused: bool = false
 
+    rl.SetTargetFPS(60)
+
+    rl.InitAudioDevice()
+    //rl.SetMasterVolume(1.0);
+    bgm_name : cstring = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
+    bgm := rl.LoadMusicStream(bgm_name)
+    BGM_START_POS : f32 = 16.0
+    rl.SeekMusicStream(bgm, BGM_START_POS)
+    rl.PlayMusicStream(bgm)
+
     for !rl.WindowShouldClose() {
+        rl.UpdateMusicStream(bgm)
         // Check for space key (pause/resume)
         if rl.IsKeyPressed(.SPACE) {
             paused = !paused
@@ -134,11 +141,15 @@ main :: proc() {
         if rl.IsKeyPressed(.R) {
             scroll_offset = 0.0
             paused = false
+            rl.SeekMusicStream(bgm, BGM_START_POS)
         }
 
         // Update scroll position (only if not paused)
         if !paused {
             scroll_offset += SCROLL_SPEED * rl.GetFrameTime()
+            rl.ResumeMusicStream(bgm)
+        }else{
+            rl.PauseMusicStream(bgm)
         }
 
         if scroll_offset > f32(text_count) * 0.8 + 10.0 {

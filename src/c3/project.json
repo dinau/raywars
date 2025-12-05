@@ -2,7 +2,7 @@
   "langrev": "1",
   "warnings":  [ "no-unused" ],
   "dependency-search-paths":  [ "lib" ],
-  "dependencies":  [ "raylib" ],
+  "dependencies":  [ "raylib55" ],
   "authors":  [ "John Doe <john.doe@example.com>" ],
   "version": "0.1.0",
   "sources":  [ "src/**" ],
@@ -12,10 +12,10 @@
   "targets": {
     "raywars": {
       "type": "executable",
-      "link-args": [ ],
+      "link-args":  [ ]
     }
   },
-  "c-include-dirs":  [ ],
+  "c-include-dirs":  [  ],
   "cpu": "generic",
   "opt": "O2"
 }

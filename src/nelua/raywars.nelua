@@ -1,5 +1,7 @@
 require 'raylib'
 require 'rlgl'
+require 'io'
+require 'vector'
 
 local SCREEN_WIDTH: int32 = 800
 local SCREEN_HEIGHT: int32 = 400
@@ -12,37 +14,23 @@ local main = function()
   rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nelua,    <SPACE>:Start / Stop, <R>:Restart")
 
   -- Text content
-  local text: [26]string = {
-    "Epic I",
-    "THE CODING ADVENTURE",
-    "",
-    "",
-    "In a galaxy powered by code,",
-    "brave programmers unite to",
-    "build incredible software",
-    "that brings joy to users",
-    "across the digital realm.",
-    "",
-    "Armed with keyboards and",
-    "determination, these heroes",
-    "debug complex systems and",
-    "craft elegant solutions to",
-    "seemingly impossible",
-    "technical challenges.",
-    "",
-    "Now, a new generation of",
-    "developers embarks on an",
-    "epic quest to master the",
-    "ancient art of programming,",
-    "seeking to create applications",
-    "that will shape the future",
-    "of technology forever....",
-    ""
-  }
+  local text: vector(string)
 
-  local text_count: int32 = 26
+  -- Open file
+  local file = io.open("../../resources/message.txt", "r")
+  if not file then
+    error("failed to open message.txt")
+  end
+  -- Read one line
+  for line in file:lines() do
+    line = line:gsub("\n$", "") -- Strip line break
+    text:insert(#text, line)
+  end
+  file:close()
+
+  local text_count: int32 = #text
   local scroll_offset: float32 = 0.0
-  local scroll_speed: float32 = 0.5
+  local scroll_speed: float32 = 0.47
   local paused: boolean = false
 
   -- Generate random star positions
@@ -87,7 +75,16 @@ local main = function()
 
   rl.setTargetFPS(60)
 
+  rl.initAudioDevice()
+  --rl.setMasterVolume(1.0)
+  local bgm_name = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+  local bgm = rl.loadMusicStream(bgm_name)
+  local BGM_START_POS = 16.0
+  rl.seekMusicStream(bgm, BGM_START_POS)
+  rl.playMusicStream(bgm)
+
   while not rl.windowShouldClose() do
+    rl.updateMusicStream(bgm)
     -- Check for space key (pause/resume)
     if rl.isKeyPressed(rl.keyboardKey.SPACE) then
       paused = not paused
@@ -97,11 +94,15 @@ local main = function()
     if rl.isKeyPressed(rl.keyboardKey.R) then
       scroll_offset = 0.0
       paused = false
+      rl.seekMusicStream(bgm, BGM_START_POS)
     end
 
     -- Update scroll position (only if not paused)
     if not paused then
       scroll_offset = scroll_offset + scroll_speed * rl.getFrameTime()
+      rl.resumeMusicStream(bgm)
+    else
+      rl.pauseMusicStream(bgm)
     end
 
     -- Reset when all lines have scrolled past

@@ -9,37 +9,14 @@ def main():
     init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Python,   <SPACE>:Start / Stop, <R>:Restart")
 
     # Text content
-    text = [
-        "Epic I",
-        "THE CODING ADVENTURE",
-        "",
-        "",
-        "In a galaxy powered by code,",
-        "brave programmers unite to",
-        "build incredible software",
-        "that brings joy to users",
-        "across the digital realm.",
-        "",
-        "Armed with keyboards and",
-        "determination, these heroes",
-        "debug complex systems and",
-        "craft elegant solutions to",
-        "seemingly impossible",
-        "technical challenges.",
-        "",
-        "Now, a new generation of",
-        "developers embarks on an",
-        "epic quest to master the",
-        "ancient art of programming,",
-        "seeking to create applications",
-        "that will shape the future",
-        "of technology forever....",
-        ""
-    ]
+    text = []
+    with open("../../resources/message.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            text.append(line.rstrip("\n"))
 
     text_count = len(text)
     scroll_offset = 0.0
-    scroll_speed = 0.5
+    scroll_speed = 0.47
     paused = False
 
     # Generate random star positions
@@ -84,7 +61,16 @@ def main():
 
     set_target_fps(60)
 
+    init_audio_device()
+    #set_master_volume(1.0)
+    bgm_name= '../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3'
+    bgm = load_music_stream(bgm_name)
+    BGM_START_POS = 16.0
+    seek_music_stream(bgm, BGM_START_POS)
+    play_music_stream(bgm)
+
     while not window_should_close():
+        update_music_stream(bgm)
         # Check for space key (pause/resume)
         if is_key_pressed(KeyboardKey.KEY_SPACE):
             paused = not paused
@@ -93,10 +79,14 @@ def main():
         if is_key_pressed(KeyboardKey.KEY_R):
             scroll_offset = 0.0
             paused = False
+            seek_music_stream(bgm, BGM_START_POS)
 
         # Update scroll position (only if not paused)
         if not paused:
             scroll_offset += scroll_speed * get_frame_time()
+            resume_music_stream(bgm)
+        else:
+            pause_music_stream(bgm)
 
         # Reset when all lines have scrolled past
         if scroll_offset > text_count * 0.8 + 10.0:

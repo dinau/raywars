@@ -1,11 +1,18 @@
+TARGET = raywars
+
 OPT += --release=fast
+
+ifeq ($(OS),Windows_NT)
+	EXE = .exe
+endif
 
 all:
 	zig version
 	zig build $(OPT)
 
-run:
-	zig build $(OPT) run
+run: all
+	(cd zig-out/bin; ./$(TARGET)$(EXE))
+
 
 clean:
 	@-rm -fr .zig-cache zig-out

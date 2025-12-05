@@ -1,3 +1,6 @@
+conv_*.bat
+*.pyc
+setenv.bat
 *.c3l
 err.txt
 .neluacache/

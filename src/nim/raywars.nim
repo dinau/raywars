@@ -9,37 +9,13 @@ const
   SCREEN_WIDTH = 800
   SCREEN_HEIGHT = 400
   BASE_FONT_SIZE = 60
-  SCROLL_SPEED = 0.5
+  SCROLL_SPEED = 0.465
   STAR_COUNT = 100
 
 # Text content
-let textLines = [
-  "Epic I",
-  "THE CODING ADVENTURE",
-  "",
-  "",
-  "In a galaxy powered by code,",
-  "brave programmers unite to",
-  "build incredible software",
-  "that brings joy to users",
-  "across the digital realm.",
-  "",
-  "Armed with keyboards and",
-  "determination, these heroes",
-  "debug complex systems and",
-  "craft elegant solutions to",
-  "seemingly impossible",
-  "technical challenges.",
-  "",
-  "Now, a new generation of",
-  "developers embarks on an",
-  "epic quest to master the",
-  "ancient art of programming,",
-  "seeking to create applications",
-  "that will shape the future",
-  "of technology forever....",
-  ""
-]
+var textLines: seq[string] = @[]
+for line in lines("../../resources/message.txt"):
+  textLines.add(line)
 
 #------
 # main
@@ -48,7 +24,6 @@ proc main() =
   # Initialize window
   setConfigFlags(flags(Msaa4xHint))
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nim,    <SPACE>:Start / Stop, <R>:Restart")
-  setTargetFPS(60)
 
   # Generate random stars
   var
@@ -61,13 +36,13 @@ proc main() =
 
   # Create textures for each line
   var textTextures: seq[RenderTexture2D] = @[]
-  for i, line in textLines:
-    if line.len == 0:
+  for i in 0..<textLines.len:
+    if textLines[i].len == 0:
       textTextures.add(RenderTexture2D(id: 0, texture: Texture2D(id: 0), depth: Texture2D(id: 0)))
       continue
 
     let fontSize = if i == 0: BASE_FONT_SIZE * 2 else: BASE_FONT_SIZE
-    let textWidth = measureText(line, fontSize.int32)
+    let textWidth = measureText(textLines[i], fontSize.int32)
     let textHeight = (fontSize + 10).int32
 
     if textWidth <= 0 or textHeight <= 0:
@@ -78,7 +53,7 @@ proc main() =
     beginTextureMode(tex)
     clearBackground(BLANK)
     let color = if i == 0 or i == 2: YELLOW else: Color(r: 255, g: 232, b: 31, a: 255)
-    drawText(line, 0, 0, fontSize.int32, color)
+    drawText(textLines[i], 0, 0, fontSize.int32, color)
     endTextureMode()
     setTextureFilter(tex.texture, TextureFilter.Bilinear)
     textTextures.add(tex)
@@ -95,8 +70,18 @@ proc main() =
   var scrollOffset = 0.0f
   var paused = false
 
+  setTargetFPS(60)
+  initAudioDevice()
+  #setMasterVolume(1.0)
+  const bgm_name= "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+  let bgm = loadMusicStream(bgm_name)
+  const BGM_START_POS = 16.0
+  seekMusicStream(bgm, BGM_START_POS)
+  playMusicStream(bgm)
+
   # Main loop
   while not windowShouldClose():
+    updateMusicStream(bgm)
     # Check for space key (pause/resume)
     if isKeyPressed(Space):
       paused = not paused
@@ -105,10 +90,14 @@ proc main() =
     if isKeyPressed(R):
       scrollOffset = 0.0
       paused = false
+      seekMusicStream(bgm, BGM_START_POS);
 
     # Update scroll position (only if not paused)
     if not paused:
       scrollOffset += SCROLL_SPEED * getFrameTime()
+      resumeMusicStream(bgm)
+    else:
+      pauseMusicStream(bgm)
 
     if scrollOffset > textLines.len.float32 * 0.8f + 10.0f:
       scrollOffset = 0.0f
