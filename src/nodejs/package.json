@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "raylib": "*"
+  },
+  "scripts": {
+      "start": "node raywars.js"
+  }
+}

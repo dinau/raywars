@@ -37,7 +37,7 @@ clean:
 	@-rm -f $(TARGET)$(EXE)
 
 run: all
-	LD_LIBRARY_PATH=$(LIBS_DIR)/$(PLATFORM)/raylib/lib ./nimcache/$(TARGET)$(EXE)
+	(cd nimcache; LD_LIBRARY_PATH=../$(LIBS_DIR)/$(PLATFORM)/raylib/lib ./$(TARGET)$(EXE) )
 
 GEN_OPT += -d:useFuthark -d:futharkRebuild --maxLoopIterationsVM:50000000
 GEN_OPT += --hint:"User:off"

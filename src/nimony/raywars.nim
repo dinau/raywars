@@ -26,7 +26,7 @@ const
 var textLines: seq[string] = @[]
 var f:File
 var line:string
-if open(f, "../../resources/message.txt"):
+if open(f, "../../../resources/message.txt"):
   while readLine(f, line):
     textLines.add(strip(line,chars={'\n','\r'}))
 
@@ -96,7 +96,7 @@ proc main() =
   setTargetFPS(60)
   initAudioDevice()
   #setMasterVolume(1.0)
-  const bgm_name: cstring = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+  const bgm_name: cstring = "../../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
   let bgm = loadMusicStream(bgm_name)
   const BGM_START_POS = 16.0'f32
   seekMusicStream(bgm, BGM_START_POS)

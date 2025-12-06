@@ -11,6 +11,7 @@
     - [Nelua](#nelua)
     - [Nim](#nim)
     - [Nimony v0.2](#nimony-v02)
+    - [Node.js / JavaScript](#nodejs--javascript)
     - [Odin](#odin)
     - [Lazarus / Pascal](#lazarus--pascal)
     - [Python](#python)
@@ -32,6 +33,8 @@
 ---
 
 Install `gcc, make, MSys2 console / commands(cp, rm ...)`
+
+Currently using Raylib v5.5 
 
 #### Download Raylib library [Only for C, Nimony, Nelua, Zig]
 
@@ -224,6 +227,24 @@ Use gcc compiler
    ```sh
    make nim
    ```
+
+#####  Node.js / JavaScript
+
+---
+
+Install [Node.js](https://nodejs.org)  (v22.16.0)  
+Using [node-raylib](https://github.com/RobLoach/node-raylib)  
+Windows / Linux  
+
+```sh
+pwd 
+raywars/src/nodejs
+
+npm install 
+make       # or npm start
+```
+
+or double click `raywars.vbs` on Windows 
 
 #####  Odin
 
