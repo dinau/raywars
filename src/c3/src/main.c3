@@ -4,7 +4,7 @@ import raylib5::rl;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 400;
 const float BASE_FONT_SIZE = 60.0;
-const float SCROLL_SPEED = 0.5;
+const float SCROLL_SPEED = 0.47;
 const int STAR_COUNT = 100;
 
 // external rlGL functions
@@ -25,7 +25,6 @@ fn int main(String[] args)
 {
     rl::setConfigFlags(ConfigFlag.MSAA_4X_HINT); // FLAG_MSAA_4X_HINT
     rl::initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in C3,   <SPACE>:Start / Stop, <R>:Restart");
-    rl::setTargetFPS(60);
 
     // Generate random stars
     rl::Vector2[STAR_COUNT] stars;
@@ -44,7 +43,7 @@ fn int main(String[] args)
     // Text lines
     String[] text_lines = {
         "Epic I",
-        "THE CODING ADVENTURE",
+        "MAY THE RAYLIB BE WITH YOU",
         "",
         "",
         "In a galaxy powered by code,",
@@ -67,7 +66,41 @@ fn int main(String[] args)
         "seeking to create applications",
         "that will shape the future",
         "of technology forever....",
-        ""
+        "",
+        "CLASSICALS.DE",
+        "If you use this track",
+        "in a project, please credit:",
+        "www.classicals.de",
+        "Licensing Information:",
+        "Conducted by Philip Milman:",
+        "https://pmmusic.pro/",
+        "Creative Commons",
+        "Attribution 3.0 Unported",
+        "CC BY 3.0",
+        "You are free to:",
+        "Share copy and redistribute",
+        "the material in any medium",
+        "or format Adapt",
+        "remix, transform, and",
+        "build upon the material",
+        "Under the following terms:",
+        "Attribution You must give",
+        "appropriate credit, provide",
+        "a link to the website, and",
+        "indicate if changes were made.",
+        "You may do so",
+        "in any reasonable manner, but",
+        "not in any way that suggests",
+        "the licensor endorses you",
+        "or your use.",
+        "No additional restrictions",
+        "You may not apply legal terms",
+        "or technological measures",
+        "that legally restrict others",
+        "from doing anything",
+        "the license permits.",
+        "Classicals.de @2025",
+        "www.classicals.de",
     };
 
     int text_count = text_lines.len;
@@ -119,8 +152,19 @@ fn int main(String[] args)
     float scroll_offset = 0.0;
     bool paused = false;
 
+    rl::setTargetFPS(60);
+
+    rl::initAudioDevice();
+    //rl::setMasterVolume(1.0);
+    ZString bgm_name = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
+    rl::Music bgm = rl::loadMusicStream(bgm_name);
+    const float BGM_START_POS = 16.0;
+    rl::seekMusicStream(bgm, BGM_START_POS);
+    rl::playMusicStream(bgm);
+
     while (!rl::windowShouldClose())
     {
+        rl::updateMusicStream(bgm);
         // Check for space key (pause/resume)
         if (rl::isKeyPressed(32)) // KEY_SPACE
         {
@@ -132,13 +176,18 @@ fn int main(String[] args)
         {
             scroll_offset = 0.0;
             paused = false;
+            rl::seekMusicStream(bgm, BGM_START_POS);
         }
 
         // Update scroll position (only if not paused)
         if (!paused)
         {
             scroll_offset += SCROLL_SPEED * rl::getFrameTime();
+            rl::resumeMusicStream(bgm);
+        }else{
+            rl::pauseMusicStream(bgm);
         }
+
 
         if (scroll_offset > (float)text_count * 0.8 + 10.0)
         {

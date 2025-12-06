@@ -1,3 +1,5 @@
+backup/
+*.compiled
 conv_*.bat
 *.pyc
 setenv.bat

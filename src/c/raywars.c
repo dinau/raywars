@@ -2,6 +2,11 @@
 #include "raymath.h"
 #include "rlgl.h"
 #include <stdio.h>
+#include <string.h>
+
+#define STB_DS_IMPLEMENTATION
+#define STBDS_NO_SHORT_NAMES
+#include "stb_ds.h"
 
 int main(void) {
   const int screenWidth = 800;
@@ -11,69 +16,20 @@ int main(void) {
   InitWindow(screenWidth, screenHeight, "Ray Wars Opening Crawl in C,   <SPACE>:Start / Stop, <R>:Restart");
 
   // Text content
-  const char *text[] = {
-        "Epic I",
-        "MAY THE RAYLIB BE WITH YOU",
-        "",
-        "",
-        "In a galaxy powered by code,",
-        "brave programmers unite to",
-        "build incredible software",
-        "that brings joy to users",
-        "across the digital realm.",
-        "",
-        "Armed with keyboards and",
-        "determination, these heroes",
-        "debug complex systems and",
-        "craft elegant solutions to",
-        "seemingly impossible",
-        "technical challenges.",
-        "",
-        "Now, a new generation of",
-        "developers embarks on an",
-        "epic quest to master the",
-        "ancient art of programming,",
-        "seeking to create applications",
-        "that will shape the future",
-        "of technology forever....",
-        "",
-        "CLASSICALS.DE",
-        "If you use this track",
-        "in a project, please credit:",
-        "www.classicals.de",
-        "Licensing Information:",
-        "Conducted by Philip Milman:",
-        "https://pmmusic.pro/",
-        "Creative Commons",
-        "Attribution 3.0 Unported",
-        "CC BY 3.0",
-        "You are free to:",
-        "Share copy and redistribute",
-        "the material in any medium",
-        "or format Adapt",
-        "remix, transform, and",
-        "build upon the material",
-        "Under the following terms:",
-        "Attribution You must give",
-        "appropriate credit, provide",
-        "a link to the website, and",
-        "indicate if changes were made.",
-        "You may do so",
-        "in any reasonable manner, but",
-        "not in any way that suggests",
-        "the licensor endorses you",
-        "or your use.",
-        "No additional restrictions",
-        "You may not apply legal terms",
-        "or technological measures",
-        "that legally restrict others",
-        "from doing anything",
-        "the license permits.",
-        "Classicals.de @2025",
-        "www.classicals.de",
-  };
+  char **text = NULL;
+  FILE *fp = fopen("../../resources/message.txt", "r");
+  if (!fp) {
+      perror("Error!: Not found message.txt");
+      return 1;
+  }
+  char buf[1024];
+  while (fgets(buf, sizeof(buf), fp)) {
+    buf[strcspn(buf, "\r\n")] = '\0'; // Delet line break
+    char *line = strdup(buf); // copy to heap
+    stbds_arrpush(text, line);
+  }
 
-  int textCount = sizeof(text) / sizeof(text[0]);
+  int textCount = stbds_arrlen(text);
   float scrollOffset = 0;
   float scrollSpeed = 0.47;
   bool paused = false;
@@ -90,7 +46,7 @@ int main(void) {
   // Create textures for each text line
   const int baseFontSize = 60;
   // const int lineSpacing = 80;
-  RenderTexture2D textTextures[sizeof(text) / sizeof(text[0])];
+  RenderTexture2D textTextures[textCount];
 
   for (int i = 0; i < textCount; i++) {
     // First line uses double font size
@@ -243,6 +199,12 @@ int main(void) {
   }
 
   CloseWindow();
+
+  for (int i = 0; i < stbds_arrlen(text); i++) {
+    free(text[i]);
+  }
+  stbds_arrfree(text);
+
 
   return 0;
 }

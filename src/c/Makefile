@@ -4,7 +4,7 @@ CC = gcc
 #CC = zig cc
 #CC = clang
 
-CFLAGS += -O0
+CFLAGS += -O3
 
 LIBS_DIR = ../../../libs
 
@@ -43,7 +43,7 @@ CFLAGS  += -I$(LIBS_DIR)/$(PLATFORM)/raylib/include
 
 all: $(TARGET)$(EXE)
 
-$(TARGET)$(EXE): $(TARGET).c Makefile
+$(TARGET)$(EXE): $(TARGET).c Makefile stb_ds.h
 	$(CC) $(CFLAGS) $(TARGET).c -o $(TARGET)$(EXE) $(LDFLAGS)
 ifneq ($(STATIC_LINK_RAYLIB),true)
 ifeq ($(PLATFORM),windows)

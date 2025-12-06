@@ -1,6 +1,7 @@
 program raywars;
 
 {$mode objfpc}{$H+}
+{$APPTYPE GUI}
 
 uses
   Classes, SysUtils, Math, raylib, raymath, rlgl;
@@ -27,42 +28,43 @@ var
   planeWidth, planeHeight: Single;
   alpha: Single;
 
+  lineList: TStringList;
+  bgm: TMusic;
+
+const
+  messageFile = '../../resources/message.txt';
+  bgm_name = '../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3';
+  BGM_START_POS = 16.0;
+
 begin
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(screenWidth, screenHeight, 'Ray Wars Opening Crawl in Pascal,   <SPACE>:Start / Stop, <R>:Restart');
 
-  // Text content
-  text := [
-    'Epic I',
-    'THE CODING ADVENTURE',
-    '',
-    '',
-    'In a galaxy powered by code,',
-    'brave programmers unite to',
-    'build incredible software',
-    'that brings joy to users',
-    'across the digital realm.',
-    '',
-    'Armed with keyboards and',
-    'determination, these heroes',
-    'debug complex systems and',
-    'craft elegant solutions to',
-    'seemingly impossible',
-    'technical challenges.',
-    '',
-    'Now, a new generation of',
-    'developers embarks on an',
-    'epic quest to master the',
-    'ancient art of programming,',
-    'seeking to create applications',
-    'that will shape the future',
-    'of technology forever....',
-    ''
-  ];
+  // Read text file
+  lineList := TStringList.Create;
+  try
+    if FileExists(messageFile) then
+    begin
+      lineList.LoadFromFile(messageFile);
+      textCount := lineList.Count;
+      SetLength(text, textCount);
+      for i := 0 to textCount - 1 do
+      begin
+        text[i] := lineList[i];
+      end;
+    end
+    else
+    begin
+      WriteLn('Error: File not found: ' + messageFile);
+      CloseWindow();
+      Exit;
+    end;
+  finally
+    lineList.Free;
+  end;
 
-  textCount := Length(text);
   scrollOffset := 0;
-  scrollSpeed := 0.5;
+  scrollSpeed := 0.47;
   paused := False;
 
   // Generate random star positions
@@ -116,8 +118,15 @@ begin
 
   SetTargetFPS(60);
 
+  InitAudioDevice();
+  //SetMasterVolume(1.0);
+  bgm := LoadMusicStream(bgm_name);
+  SeekMusicStream(bgm, BGM_START_POS);
+  PlayMusicStream(bgm);
+
   while not WindowShouldClose() do
   begin
+    UpdateMusicStream(bgm);
     // Check for space key (pause/resume)
     if IsKeyPressed(KEY_SPACE) then
       paused := not paused;
@@ -127,11 +136,17 @@ begin
     begin
       scrollOffset := 0.0;
       paused := False;
+      SeekMusicStream(bgm, BGM_START_POS);
     end;
 
     // Update scroll position (only if not paused)
     if not paused then
+    begin
       scrollOffset := scrollOffset + scrollSpeed * GetFrameTime();
+      ResumeMusicStream(bgm);
+    end
+    else
+     PauseMusicStream(bgm);
 
     // Reset when all lines have scrolled past
     if scrollOffset > textCount * 0.8 + 10.0 then
