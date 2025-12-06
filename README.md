@@ -55,8 +55,8 @@ then extracts it.
    - Windows
    
       ```sh
-      mkdir -p     libs/win
-      cp -r raylib libs/win/  
+      mkdir -p     libs/windows
+      cp -r raylib libs/windows/  
       ```
    
    - Linux
@@ -77,7 +77,7 @@ then extracts it.
       |       snip
       | 
       `-- libs
-          |-- win
+          |-- windows
           |   `-- raylib    <==
           `-- linux
               `-- raylib    <==
@@ -169,7 +169,7 @@ make run
       | 
       `-- libs
           |-- Raylib.nelua   <== For Nelua
-          |-- win
+          |-- windows
           |   `-- raylib
           `-- linux
               `-- raylib
@@ -261,8 +261,8 @@ Using [odin version dev-2025-11 (-nightly:e5153a9)](https://github.com/odin-lang
       ```sh
       pwd
       your_work_dir
-      mkdir -p          libs/win
-      cp -r raylib_msvc libs/win/  
+      mkdir -p          libs/windows
+      cp -r raylib_msvc libs/windows/  
       ```
       
    1. Folder structure:
@@ -276,7 +276,7 @@ Using [odin version dev-2025-11 (-nightly:e5153a9)](https://github.com/odin-lang
          |       snip
          | 
          `-- libs
-             |-- win
+             |-- windows
              |   |-- raylib    
              |   `-- raylib_msvc    <== for Odin
              `-- linux
