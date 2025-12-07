@@ -30,15 +30,22 @@ var
 
   lineList: TStringList;
   bgm: TMusic;
+  titleBarIcon: TImage;
 
 const
   messageFile = '../../resources/message.txt';
   bgm_name = '../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3';
   BGM_START_POS = 16.0;
 
+{$R *.res}
+
 begin
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(screenWidth, screenHeight, 'Ray Wars Opening Crawl in Pascal,   <SPACE>:Start / Stop, <R>:Restart');
+
+  titleBarIcon := LoadImage('./resources/ray.png');
+  SetWindowIcon(titleBarIcon);
+  UnloadImage(titleBarIcon);
 
   // Read text file
   lineList := TStringList.Create;

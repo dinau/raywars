@@ -13,6 +13,10 @@ local main = function()
   rl.setConfigFlags(rl.configFlags.MSAA_4X_HINT)
   rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nelua,    <SPACE>:Start / Stop, <R>:Restart")
 
+  local title_bar_icon = rl.loadImage("./resources/ray.png")
+  rl.setWindowIcon(title_bar_icon)
+  rl.unloadImage(title_bar_icon)
+
   -- Text content
   local text: vector(string)
 

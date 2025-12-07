@@ -21,6 +21,15 @@ pub fn build(b: *std.Build) void {
     // for root_module
     exe.root_module.link_libc = true;
 
+    // Add Icon to Windows exe file
+    switch (builtin.target.os.tag) {
+        .windows => {
+            exe.root_module.addWin32ResourceFile(.{ .file = b.path("src/res/res.rc") });
+        },
+        .linux => {},
+        else => {},
+    }
+
     // Hide console window
     exe.subsystem = .Windows;
 
@@ -28,9 +37,13 @@ pub fn build(b: *std.Build) void {
 
     const res1 = b.addInstallFile(b.path("../../resources/message.txt"), "bin/resources/message.txt");
     b.getInstallStep().dependOn(&res1.step);
+
     const soundName = "Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
     const res2 = b.addInstallFile(b.path(b.pathJoin(&.{"../../resources/", soundName})), b.pathJoin(&.{"bin/resources/", soundName}));
     b.getInstallStep().dependOn(&res2.step);
+
+    const res3 = b.addInstallFile(b.path("./resources/ray.png"), "bin/resources/ray.png");
+    b.getInstallStep().dependOn(&res3.step);
 
 
     // for Dynamic link

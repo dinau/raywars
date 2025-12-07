@@ -21,10 +21,16 @@ extern fn void rl_vertex3f(float x, float y, float z) @extern("rlVertex3f");
 
 const int RL_QUADS = 7;
 
+ZString bgm_name = "../../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
+
 fn int main(String[] args)
 {
     rl::setConfigFlags(ConfigFlag.MSAA_4X_HINT); // FLAG_MSAA_4X_HINT
     rl::initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in C3,   <SPACE>:Start / Stop, <R>:Restart");
+
+    Image title_bar_icon = rl::loadImage("./resources/ray.png");
+    rl::setWindowIcon(title_bar_icon);
+    rl::unloadImage(title_bar_icon);
 
     // Generate random stars
     rl::Vector2[STAR_COUNT] stars;
@@ -156,7 +162,6 @@ fn int main(String[] args)
 
     rl::initAudioDevice();
     //rl::setMasterVolume(1.0);
-    ZString bgm_name = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
     rl::Music bgm = rl::loadMusicStream(bgm_name);
     const float BGM_START_POS = 16.0;
     rl::seekMusicStream(bgm, BGM_START_POS);

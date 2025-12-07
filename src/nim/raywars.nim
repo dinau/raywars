@@ -4,6 +4,8 @@
 import raylib
 import rlgl
 import random
+when defined(windows):
+  include ./res/resource
 
 const
   SCREEN_WIDTH = 800
@@ -24,6 +26,9 @@ proc main() =
   # Initialize window
   setConfigFlags(flags(Msaa4xHint))
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nim,    <SPACE>:Start / Stop, <R>:Restart")
+
+  let title_bar_icon = loadImage("./resources/ray.png")
+  setWindowIcon(title_bar_icon)
 
   # Generate random stars
   var

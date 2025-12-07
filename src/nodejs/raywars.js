@@ -1,12 +1,16 @@
-const r = require('raylib')
+const rl = require('raylib')
 const fs = require('fs')
 
 const SCREEN_WIDTH = 800
 const SCREEN_HEIGHT = 400
 
 function main() {
-    r.SetConfigFlags(r.FLAG_MSAA_4X_HINT)
-    r.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Node.js,   <SPACE>:Start / Stop, <R>:Restart")
+    rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT)
+    rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Node.js,   <SPACE>:Start / Stop, <R>:Restart")
+
+    const title_bar_icon = rl.LoadImage("../../resources/ray.png")
+    rl.SetWindowIcon(title_bar_icon)
+    rl.UnloadImage(title_bar_icon)
 
     // Read text content
     const text = []
@@ -26,10 +30,10 @@ function main() {
     const starSizes = []
     for (let i = 0; i < 100; i++) {
         stars.push({
-            x: r.GetRandomValue(0, SCREEN_WIDTH),
-            y: r.GetRandomValue(0, SCREEN_HEIGHT)
+            x: rl.GetRandomValue(0, SCREEN_WIDTH),
+            y: rl.GetRandomValue(0, SCREEN_HEIGHT)
         })
-        starSizes.push(r.GetRandomValue(5, 10) / 10.0)
+        starSizes.push(rl.GetRandomValue(5, 10) / 10.0)
     }
 
     // Create textures for each text line
@@ -40,19 +44,19 @@ function main() {
         const line = text[i]
         // First line uses double font size
         const fontSize = (i === 0) ? baseFontSize * 2 : baseFontSize
-        const textWidth = r.MeasureText(line, fontSize)
+        const textWidth = rl.MeasureText(line, fontSize)
         const textHeight = fontSize + 10
 
         if (textWidth > 0 && textHeight > 0) {
-            const texture = r.LoadRenderTexture(textWidth, textHeight)
+            const texture = rl.LoadRenderTexture(textWidth, textHeight)
 
-            r.BeginTextureMode(texture)
-            r.ClearBackground(r.BLANK)
-            const textColor = (i === 0 || i === 1) ? r.YELLOW : r.Color(255, 232, 31, 255)
-            r.DrawText(line, 0, 0, fontSize, textColor)
-            r.EndTextureMode()
+            rl.BeginTextureMode(texture)
+            rl.ClearBackground(rl.BLANK)
+            const textColor = (i === 0 || i === 1) ? rl.YELLOW : rl.Color(255, 232, 31, 255)
+            rl.DrawText(line, 0, 0, fontSize, textColor)
+            rl.EndTextureMode()
 
-            r.SetTextureFilter(texture.texture, r.TEXTURE_FILTER_BILINEAR)
+            rl.SetTextureFilter(texture.texture, rl.TEXTURE_FILTER_BILINEAR)
             textTextures.push(texture)
         } else {
             textTextures.push(null)
@@ -65,39 +69,39 @@ function main() {
         target: { x: 0.0, y: 0.0, z: -1.0 },
         up: { x: 0.0, y: 1.0, z: 0.0 },
         fovy: 45.0,
-        projection: r.CAMERA_PERSPECTIVE
+        projection: rl.CAMERA_PERSPECTIVE
     }
 
-    r.SetTargetFPS(60)
+    rl.SetTargetFPS(60)
 
-    r.InitAudioDevice()
+    rl.InitAudioDevice()
     const bgmName = '../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3'
-    const bgm = r.LoadMusicStream(bgmName)
+    const bgm = rl.LoadMusicStream(bgmName)
     const BGM_START_POS = 16.0
-    r.SeekMusicStream(bgm, BGM_START_POS)
-    r.PlayMusicStream(bgm)
+    rl.SeekMusicStream(bgm, BGM_START_POS)
+    rl.PlayMusicStream(bgm)
 
-    while (!r.WindowShouldClose()) {
-        r.UpdateMusicStream(bgm)
+    while (!rl.WindowShouldClose()) {
+        rl.UpdateMusicStream(bgm)
 
         // Check for space key (pause/resume)
-        if (r.IsKeyPressed(r.KEY_SPACE)) {
+        if (rl.IsKeyPressed(rl.KEY_SPACE)) {
             paused = !paused
         }
 
         // Check for R key (restart)
-        if (r.IsKeyPressed(r.KEY_R)) {
+        if (rl.IsKeyPressed(rl.KEY_R)) {
             scrollOffset = 0.0
             paused = false
-            r.SeekMusicStream(bgm, BGM_START_POS)
+            rl.SeekMusicStream(bgm, BGM_START_POS)
         }
 
         // Update scroll position (only if not paused)
         if (!paused) {
-            scrollOffset += scrollSpeed * r.GetFrameTime()
-            r.ResumeMusicStream(bgm)
+            scrollOffset += scrollSpeed * rl.GetFrameTime()
+            rl.ResumeMusicStream(bgm)
         } else {
-            r.PauseMusicStream(bgm)
+            rl.PauseMusicStream(bgm)
         }
 
         // Reset when all lines have scrolled past
@@ -106,16 +110,16 @@ function main() {
         }
 
         // Start drawing
-        r.BeginDrawing()
-        r.ClearBackground(r.BLACK)
+        rl.BeginDrawing()
+        rl.ClearBackground(rl.BLACK)
 
         // Draw background stars
         for (let i = 0; i < stars.length; i++) {
-            r.DrawCircle(Math.floor(stars[i].x), Math.floor(stars[i].y), starSizes[i], r.WHITE)
+            rl.DrawCircle(Math.floor(stars[i].x), Math.floor(stars[i].y), starSizes[i], rl.WHITE)
         }
 
         // Begin 3D mode
-        r.BeginMode3D(camera)
+        rl.BeginMode3D(camera)
 
         // Draw each line as a separate plane
         for (let i = 0; i < textTextures.length; i++) {
@@ -132,16 +136,16 @@ function main() {
 
             // Only draw if visible
             if (lineOffset > -2.0 && lineOffset < 15.0) {
-                r.rlPushMatrix()
+                rl.rlPushMatrix()
 
                 // Calculate movement along Y and Z (60° angle)
                 const moveY = lineOffset * 0.866  // sin(60°)
                 const moveZ = -lineOffset * 0.5   // cos(60°)
 
-                r.rlTranslatef(0.0, -3.0 + moveY, -5.0 + moveZ)
+                rl.rlTranslatef(0.0, -3.0 + moveY, -5.0 + moveZ)
 
                 // Tilt plane backward 70 degrees
-                r.rlRotatef(-70.0, 1.0, 0.0, 0.0)
+                rl.rlRotatef(-70.0, 1.0, 0.0, 0.0)
 
                 // Plane size
                 const planeWidth = textWidth / 100.0
@@ -163,36 +167,36 @@ function main() {
                 }
 
                 // Draw textured plane
-                r.rlSetTexture(texture.texture.id)
+                rl.rlSetTexture(texture.texture.id)
 
-                r.rlBegin(r.RL_QUADS)
-                r.rlColor4f(1.0, 1.0, 1.0, alpha)
+                rl.rlBegin(rl.RL_QUADS)
+                rl.rlColor4f(1.0, 1.0, 1.0, alpha)
 
                 // Quad vertices
-                r.rlTexCoord2f(0.0, 0.0); r.rlVertex3f(-planeWidth/2, 0.0, 0.0)
-                r.rlTexCoord2f(1.0, 0.0); r.rlVertex3f(planeWidth/2, 0.0, 0.0)
-                r.rlTexCoord2f(1.0, 1.0); r.rlVertex3f(planeWidth/2, planeHeight, 0.0)
-                r.rlTexCoord2f(0.0, 1.0); r.rlVertex3f(-planeWidth/2, planeHeight, 0.0)
+                rl.rlTexCoord2f(0.0, 0.0); rl.rlVertex3f(-planeWidth/2, 0.0, 0.0)
+                rl.rlTexCoord2f(1.0, 0.0); rl.rlVertex3f(planeWidth/2, 0.0, 0.0)
+                rl.rlTexCoord2f(1.0, 1.0); rl.rlVertex3f(planeWidth/2, planeHeight, 0.0)
+                rl.rlTexCoord2f(0.0, 1.0); rl.rlVertex3f(-planeWidth/2, planeHeight, 0.0)
 
-                r.rlEnd()
-                r.rlSetTexture(0)
+                rl.rlEnd()
+                rl.rlSetTexture(0)
 
-                r.rlPopMatrix()
+                rl.rlPopMatrix()
             }
         }
 
-        r.EndMode3D()
-        r.EndDrawing()
+        rl.EndMode3D()
+        rl.EndDrawing()
     }
 
     // Unload textures
     for (let texture of textTextures) {
         if (texture !== null) {
-            r.UnloadRenderTexture(texture)
+            rl.UnloadRenderTexture(texture)
         }
     }
 
-    r.CloseWindow()
+    rl.CloseWindow()
 }
 
 main()

@@ -7,6 +7,9 @@ SCREEN_HEIGHT = 400
 def main():
     set_config_flags(ConfigFlags.FLAG_MSAA_4X_HINT)
     init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Python,   <SPACE>:Start / Stop, <R>:Restart")
+    title_bar_icon = load_image("../../resources/ray.png")
+    set_window_icon(title_bar_icon)
+    unload_image(title_bar_icon)
 
     # Text content
     text = []

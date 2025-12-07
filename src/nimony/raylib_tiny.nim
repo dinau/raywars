@@ -134,3 +134,6 @@ proc pauseAudioStream*(stream: AudioStream): void {.cdecl, importc: "PauseAudioS
 proc playMusicStream*(music: Music): void {.cdecl, importc: "PlayMusicStream".}
 proc updateMusicStream*(music: Music): void {.cdecl, importc: "UpdateMusicStream".}
 proc pauseMusicStream*(music: Music): void {.cdecl, importc: "PauseMusicStream".}
+proc loadImage*(fileName: cstring): Image {.cdecl, importc: "LoadImage".}
+proc setWindowIcon*(image: Image): void {.cdecl, importc: "SetWindowIcon".}
+proc unloadImage*(image: Image): void {.cdecl, importc: "UnloadImage".}

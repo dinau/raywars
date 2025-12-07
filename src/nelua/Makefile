@@ -13,6 +13,7 @@ ifeq ($(OS),Windows_NT)
 	EXE = .exe
 	ifeq ($(HIDE_CONSOLE),true)
 	  NELUA_LDFLAGS += -mwindows
+	  NELUA_LDFLAGS += res/ray64.res
 	endif
 	NELUA_LDFLAGS += $(LIB_RAYLIB) -lopengl32 -lgdi32 -lwinmm -limm32
 	PLATFORM = windows

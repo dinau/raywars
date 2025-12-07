@@ -9,7 +9,7 @@ import rl "vendor:raylib"
 SCREEN_WIDTH :: 800
 SCREEN_HEIGHT :: 400
 BASE_FONT_SIZE :: 60
-SCROLL_SPEED :: 0.5
+SCROLL_SPEED :: 0.47
 STAR_COUNT :: 100
 
 // rlGL functions external declarations
@@ -39,6 +39,10 @@ main :: proc() {
     rl.SetConfigFlags({.MSAA_4X_HINT})
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Odin,   <SPACE>:Start / Stop, <R>:Restart")
     defer rl.CloseWindow()
+
+    title_bar_icon := rl.LoadImage("../../resources/ray.png")
+    rl.SetWindowIcon(title_bar_icon)
+    rl.UnloadImage(title_bar_icon)
 
     stars: [STAR_COUNT]rl.Vector2
     star_sizes: [STAR_COUNT]f32

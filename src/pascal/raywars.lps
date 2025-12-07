@@ -8,16 +8,41 @@
         <Filename Value="raywars.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="209"/>
-        <CursorPos X="5" Y="231"/>
+        <TopLine Value="36"/>
+        <CursorPos X="19" Y="46"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
     </Units>
-    <JumpHistory>
+    <JumpHistory HistoryIndex="6">
       <Position>
         <Filename Value="raywars.lpr"/>
         <Caret Line="26" Column="18" TopLine="13"/>
+      </Position>
+      <Position>
+        <Filename Value="raywars.lpr"/>
+        <Caret Line="231" Column="5" TopLine="209"/>
+      </Position>
+      <Position>
+        <Filename Value="raywars.lpr"/>
+        <Caret Line="44" Column="12" TopLine="27"/>
+      </Position>
+      <Position>
+        <Filename Value="raywars.lpr"/>
+        <Caret Line="46" Column="24" TopLine="27"/>
+      </Position>
+      <Position>
+        <Filename Value="raywars.lpr"/>
+        <Caret Line="44" Column="25" TopLine="31"/>
+      </Position>
+      <Position>
+        <Filename Value="raywars.lpr"/>
+        <Caret Line="48" Column="10" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="raywars.lpr"/>
+        <Caret Line="55" Column="21" TopLine="41"/>
       </Position>
     </JumpHistory>
     <RunParams>

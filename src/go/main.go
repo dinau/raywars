@@ -19,6 +19,10 @@ func main() {
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Go,   <SPACE>:Start / Stop, <R>:Restart")
 	defer rl.CloseWindow()
 
+	titleBarIcon := rl.LoadImage("./resources/ray.png")
+	rl.SetWindowIcon(*titleBarIcon)
+	rl.UnloadImage  (titleBarIcon)
+
 	// Generate random stars
 	stars := make([]rl.Vector2, STAR_COUNT)
 	starSizes := make([]float32, STAR_COUNT)

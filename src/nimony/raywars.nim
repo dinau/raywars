@@ -3,6 +3,9 @@
 import raylib_tiny
 import std/[syncio,strutils]
 
+#when defined(windows):
+#  include ./res/resource
+
 proc rand*(): int32 {.cdecl,importc.}
 proc clamp(x, a, b:float32): float32 =
   if x <= a:
@@ -37,7 +40,11 @@ proc main() =
   # Initialize window
   setConfigFlags(FLAG_MSAA_4X_HINT)
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nimony v0.2,    <SPACE>:Start / Stop, <R>:Restart")
-  setTargetFPS(60)
+
+  let titleBarIcon = loadImage("../resources/ray.png")
+  setWindowIcon(titleBarIcon)
+  unloadImage(titleBarIcon)
+
 
   # Generate random stars
   when defined(nim_compiler):

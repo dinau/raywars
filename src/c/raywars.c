@@ -15,6 +15,10 @@ int main(void) {
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(screenWidth, screenHeight, "Ray Wars Opening Crawl in C,   <SPACE>:Start / Stop, <R>:Restart");
 
+  Image title_bar_icon = LoadImage("./resources/ray.png");
+  SetWindowIcon(title_bar_icon);
+  UnloadImage(title_bar_icon);
+
   // Text content
   char **text = NULL;
   FILE *fp = fopen("../../resources/message.txt", "r");

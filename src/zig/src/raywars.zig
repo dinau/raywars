@@ -12,6 +12,10 @@ pub fn main() !void {
     rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT);
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Zig,   <SPACE>:Start / Stop, <R>:Restart");
 
+    const title_bar_icon = rl.LoadImage("./resources/ray.png");
+    rl.SetWindowIcon(title_bar_icon);
+    rl.UnloadImage(title_bar_icon);
+
     var stars: [STAR_COUNT]rl.Vector2 = undefined;
     var starSizes: [STAR_COUNT]f32 = undefined;
 

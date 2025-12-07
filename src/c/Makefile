@@ -17,6 +17,7 @@ ifeq ($(OS),Windows_NT)
 	ifeq ($(STATIC_LINK_RAYLIB),true)
 		LIB_RAYLIB = -lraylib
 		LDFLAGS += -static
+		LDFLAGS += res/ray64.res
 	else
 		LIB_RAYLIB = -lraylibdll
 	endif

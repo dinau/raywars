@@ -12,7 +12,7 @@
   "targets": {
     "raywars": {
       "type": "executable",
-      "link-args":  [ ]
+      "link-args":  [  ]
     }
   },
   "c-include-dirs":  [  ],

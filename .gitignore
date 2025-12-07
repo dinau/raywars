@@ -1,3 +1,5 @@
+src/rust/
+src/pascal/lib/
 package-lock.json
 node_modules/
 backup/

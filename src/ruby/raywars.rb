@@ -8,6 +8,10 @@ def main()
   Raylib.SetConfigFlags(Raylib::FLAG_MSAA_4X_HINT)
   Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Ruby,   <SPACE>:Start / Stop, <R>:Restart")
 
+  title_bar_icon = Raylib.LoadImage("../../resources/ray.png")
+  Raylib.SetWindowIcon(title_bar_icon)
+  Raylib.UnloadImage(title_bar_icon)
+
   # Text content
   text = []
   File.foreach("../../resources/message.txt") do |line|
@@ -16,7 +20,7 @@ def main()
 
   text_count = text.length
   scroll_offset = 0.0
-  scroll_speed = 0.46
+  scroll_speed = 0.47
   paused = false
 
   # Generate random star positions
