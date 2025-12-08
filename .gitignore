@@ -1,4 +1,7 @@
-src/rust/
+src/julia/
+src/rust/target/
+src/rust/Cargo.lock
+src/rust/cargo.lock
 src/pascal/lib/
 package-lock.json
 node_modules/

@@ -1,0 +1,8 @@
+# Hide console window on Windows
+
+
+#[target.x86_64-pc-windows-gnu]
+#rustflags = ["-C", "link-arg=/SUBSYSTEM:windows"]
+
+##[target.x86_64-pc-windows-msvc]
+##rustflags = ["-C", "link-arg=-Wl,--subsystem,windows"]

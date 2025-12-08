@@ -8,6 +8,7 @@
     - [C](#c)
     - [C3](#c3)
     - [Go](#go)
+    - [Julia](#julia)
     - [Nelua](#nelua)
     - [Nim](#nim)
     - [Nimony v0.2](#nimony-v02)
@@ -16,6 +17,7 @@
     - [Lazarus / Pascal](#lazarus--pascal)
     - [Python](#python)
     - [Ruby](#ruby)
+    - [Rust](#rust)
     - [Zig](#zig)
   - [Credit](#credit)
 
@@ -105,7 +107,7 @@ Use gcc compiler
 
 ---
 
-C3 Compiler Version:       0.7.7
+C3 Compiler Version:       0.7.8
 
 [Install C3lang](https://c3-lang.org/getting-started/prebuilt-binaries/)
 
@@ -141,6 +143,32 @@ windows
 ```sh
 make run
 ```
+
+##### Julia
+
+---
+
+WIP
+
+Julia 1.12.2  
+Using https://github.com/imohag9/RaylibWrapper.jl  
+
+```sh
+pwd 
+raywars/src/julia
+
+julia
+julia>]
+(@v1.12) pkg> add https://github.com/imohag9/RaylibWrapper.jl
+```
+
+windows[^julia_dll]
+
+```sh
+make run
+```
+
+[^julia_dll]: If access to `raylib.dll` is denied, please grant read and execute permissions to `raylib.dll`.
 
 #####  Nelua 
 
@@ -239,8 +267,8 @@ Windows / Linux
 ```sh
 pwd 
 raywars/src/nodejs
-
 npm install 
+
 make       # or npm start
 ```
 
@@ -333,7 +361,25 @@ pwd
 raywars/src/ruby
 
 gem install raylib-bingings
+
 ruby raywars.rb             # or double click raywars.rbw on Windows
+```
+
+#####  Rust 
+
+---
+
+For Windows set enviroment variable path `LIBCLANG_PATH`,  
+set `LIBCLANG_PATH=C:\path\to\libclang_dll_folder`
+- See  
+https://rust-lang.github.io/rust-bindgen/requirements.html#clang  
+https://github.com/rust-lang/rust-bindgen
+
+```sh
+pwd 
+raywars/src/rust
+
+make run
 ```
 
 ##### Zig

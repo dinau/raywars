@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) void {
     // Add Icon to Windows exe file
     switch (builtin.target.os.tag) {
         .windows => {
-            exe.root_module.addWin32ResourceFile(.{ .file = b.path("src/res/res.rc") });
+            exe.root_module.addWin32ResourceFile(.{ .file = b.path("src/res/ray.rc") });
         },
         .linux => {},
         else => {},

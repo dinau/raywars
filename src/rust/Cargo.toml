@@ -1,0 +1,21 @@
+[[bin]]
+name = "raywars"
+path = "src/raywars.rs"
+
+[package]
+build = "build.rs"
+name = "raywars"
+version = "0.1.0"
+edition = "2021"
+
+[target.'cfg(windows)'.build-dependencies]
+windres = "0.1"
+
+[dependencies]
+raylib = { version = "5.5.1", features = [] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
