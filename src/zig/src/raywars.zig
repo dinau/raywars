@@ -9,7 +9,7 @@ const STAR_COUNT = 100;
 
 pub fn main() !void {
 
-    rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT);
+    rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT | rl.FLAG_WINDOW_HIDDEN);
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Zig,   <SPACE>:Start / Stop, <R>:Restart");
 
     const title_bar_icon = rl.LoadImage("./resources/ray.png");
@@ -117,6 +117,8 @@ pub fn main() !void {
     rl.SeekMusicStream(bgm, BGM_START_POS);
     rl.PlayMusicStream(bgm);
 
+    var delayShowWindow: i32 = 1;
+
     while (!rl.WindowShouldClose()) {
         rl.UpdateMusicStream(bgm);
         // Check for space key (pause/resume)
@@ -201,6 +203,14 @@ pub fn main() !void {
 
         rl.EndMode3D();
         rl.EndDrawing();
+
+        if (delayShowWindow == 0) {
+            rl.ClearWindowState(rl.FLAG_WINDOW_HIDDEN);
+        }
+        if (delayShowWindow >= 0) {
+            delayShowWindow -= 1;
+        }
+
     }
 
     rl.CloseWindow();

@@ -24,7 +24,7 @@ for line in lines("../../resources/message.txt"):
 #------
 proc main() =
   # Initialize window
-  setConfigFlags(flags(Msaa4xHint))
+  setConfigFlags(flags(Msaa4xHint,WindowHidden))
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nim,    <SPACE>:Start / Stop, <R>:Restart")
 
   let title_bar_icon = loadImage("./resources/ray.png")
@@ -83,6 +83,8 @@ proc main() =
   const BGM_START_POS = 16.0
   seekMusicStream(bgm, BGM_START_POS)
   playMusicStream(bgm)
+
+  var delayShowWindow: int32 = 1 # For eliminating flicker at startup
 
   # Main loop
   while not windowShouldClose():
@@ -159,7 +161,12 @@ proc main() =
     endMode3D()
     endDrawing()
 
-#end while
+    if delayShowWindow == 0:
+      clearWindowState(flags(WindowHidden)) #-- Show window
+    if delayShowWindow >= 0:
+      dec delayShowWindow
+
+  #end while
   closeWindow()
 
 #------

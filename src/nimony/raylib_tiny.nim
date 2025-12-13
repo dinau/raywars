@@ -1,11 +1,16 @@
 const RL_QUADS*:int32 = 7
 const RL_TRIANGLES* = 4
 const RL_LINES*:int32 = 1
+
 const KEY_SPACE*:int32  = 32
 const KEY_R*:int32  = 82
+
 const FLAG_MSAA_4X_HINT*:uint32 = 32
+const FLAG_WINDOW_HIDDEN*:uint32 = 128
+
 const CAMERA_PERSPECTIVE*:cint = 0
 const TEXTURE_FILTER_BILINEAR*:cint = 1
+
 type
   struct_Vector2* {.bycopy.} = object
     x*: cfloat
@@ -137,3 +142,4 @@ proc pauseMusicStream*(music: Music): void {.cdecl, importc: "PauseMusicStream".
 proc loadImage*(fileName: cstring): Image {.cdecl, importc: "LoadImage".}
 proc setWindowIcon*(image: Image): void {.cdecl, importc: "SetWindowIcon".}
 proc unloadImage*(image: Image): void {.cdecl, importc: "UnloadImage".}
+proc clearWindowState*(flags: cuint): void {.cdecl, importc: "ClearWindowState".}

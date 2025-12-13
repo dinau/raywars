@@ -25,7 +25,7 @@ ZString bgm_name = "../../../resources/Classicals.de - Strauss, Richard - Also s
 
 fn int main(String[] args)
 {
-    rl::setConfigFlags(ConfigFlag.MSAA_4X_HINT); // FLAG_MSAA_4X_HINT
+    rl::setConfigFlags(ConfigFlag.MSAA_4X_HINT | ConfigFlag.WINDOW_HIDDEN); // FLAG_MSAA_4X_HINT
     rl::initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in C3,   <SPACE>:Start / Stop, <R>:Restart");
 
     Image title_bar_icon = rl::loadImage("./resources/ray.png");
@@ -167,6 +167,8 @@ fn int main(String[] args)
     rl::seekMusicStream(bgm, BGM_START_POS);
     rl::playMusicStream(bgm);
 
+    int delayShowWindow = 1;
+
     while (!rl::windowShouldClose())
     {
         rl::updateMusicStream(bgm);
@@ -268,6 +270,14 @@ fn int main(String[] args)
 
         rl::endMode3D();
         rl::endDrawing();
+
+        if (delayShowWindow == 0) {
+          rl::clearWindowState(ConfigFlag.WINDOW_HIDDEN); // Show window
+        }
+        if (delayShowWindow >= 0) {
+          delayShowWindow -= 1;
+        }
+
     }
 
     // Unload textures

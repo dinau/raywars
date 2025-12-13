@@ -5,7 +5,7 @@ const SCREEN_WIDTH = 800
 const SCREEN_HEIGHT = 400
 
 function main() {
-    rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT)
+    rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT | rl.FLAG_WINDOW_HIDDEN)
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Node.js,   <SPACE>:Start / Stop, <R>:Restart")
 
     const title_bar_icon = rl.LoadImage("../../resources/ray.png")
@@ -80,6 +80,8 @@ function main() {
     const BGM_START_POS = 16.0
     rl.SeekMusicStream(bgm, BGM_START_POS)
     rl.PlayMusicStream(bgm)
+
+    let delayShowWindow = 1 // For eliminating flicker at startup
 
     while (!rl.WindowShouldClose()) {
         rl.UpdateMusicStream(bgm)
@@ -187,6 +189,13 @@ function main() {
 
         rl.EndMode3D()
         rl.EndDrawing()
+
+        if (delayShowWindow == 0) {
+            rl.ClearWindowState(rl.FLAG_WINDOW_HIDDEN) // Show window
+        }
+        if (delayShowWindow >= 0) {
+            delayShowWindow -= 1;
+        }
     }
 
     // Unload textures

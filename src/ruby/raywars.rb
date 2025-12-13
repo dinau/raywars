@@ -5,7 +5,7 @@ SCREEN_HEIGHT = 400
 
 
 def main()
-  Raylib.SetConfigFlags(Raylib::FLAG_MSAA_4X_HINT)
+  Raylib.SetConfigFlags(Raylib::FLAG_MSAA_4X_HINT | Raylib::FLAG_WINDOW_HIDDEN)
   Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Ruby,   <SPACE>:Start / Stop, <R>:Restart")
 
   title_bar_icon = Raylib.LoadImage("../../resources/ray.png")
@@ -74,6 +74,8 @@ def main()
   bgm_start_pos = 16.0
   Raylib.SeekMusicStream(bgm, bgm_start_pos)
   Raylib.PlayMusicStream(bgm)
+
+  delayShowWindow = 1 # For eliminating flicker at startup
 
   until Raylib.WindowShouldClose()
     Raylib.UpdateMusicStream(bgm)
@@ -177,8 +179,15 @@ def main()
     end
 
     Raylib.EndMode3D()
-
     Raylib.EndDrawing()
+
+    if delayShowWindow == 0
+      Raylib::ClearWindowState(Raylib::FLAG_WINDOW_HIDDEN) # Show window
+    end
+    if delayShowWindow >= 0
+      delayShowWindow -=1
+    end
+
   end
 
   # Unload textures

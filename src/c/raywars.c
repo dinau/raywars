@@ -12,7 +12,7 @@ int main(void) {
   const int screenWidth = 800;
   const int screenHeight = 400;
 
-  SetConfigFlags(FLAG_MSAA_4X_HINT);
+  SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIDDEN);
   InitWindow(screenWidth, screenHeight, "Ray Wars Opening Crawl in C,   <SPACE>:Start / Stop, <R>:Restart");
 
   Image title_bar_icon = LoadImage("./resources/ray.png");
@@ -89,6 +89,8 @@ int main(void) {
   const float BGM_START_POS = 16.0;
   SeekMusicStream(bgm, BGM_START_POS);
   PlayMusicStream(bgm);
+
+  int delayShowWindow = 1;
 
   while (!WindowShouldClose()) {
     UpdateMusicStream(bgm);
@@ -195,6 +197,13 @@ int main(void) {
 
     EndMode3D();
     EndDrawing();
+
+    if (delayShowWindow == 0) {
+        ClearWindowState(FLAG_WINDOW_HIDDEN); // Show window
+    }
+    if (delayShowWindow >= 0) {
+        delayShowWindow -= 1;
+    }
   }
 
   // Unload textures

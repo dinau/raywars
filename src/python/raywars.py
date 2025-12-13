@@ -5,7 +5,7 @@ SCREEN_HEIGHT = 400
 
 
 def main():
-    set_config_flags(ConfigFlags.FLAG_MSAA_4X_HINT)
+    set_config_flags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_WINDOW_HIDDEN)
     init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Python,   <SPACE>:Start / Stop, <R>:Restart")
     title_bar_icon = load_image("../../resources/ray.png")
     set_window_icon(title_bar_icon)
@@ -71,6 +71,8 @@ def main():
     BGM_START_POS = 16.0
     seek_music_stream(bgm, BGM_START_POS)
     play_music_stream(bgm)
+
+    delayShowWindow = 1 # For eliminating flicker at startup
 
     while not window_should_close():
         update_music_stream(bgm)
@@ -166,8 +168,13 @@ def main():
                 rl_pop_matrix()
 
         end_mode_3d()
-
         end_drawing()
+
+        if delayShowWindow == 0:
+          clear_window_state(ConfigFlags.FLAG_WINDOW_HIDDEN) #-- Show window
+        if delayShowWindow >= 0:
+          delayShowWindow -=1
+
 
     # Unload textures
     for texture in text_textures:

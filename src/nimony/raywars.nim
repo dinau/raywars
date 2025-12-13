@@ -38,7 +38,7 @@ if open(f, "../../../resources/message.txt"):
 #------
 proc main() =
   # Initialize window
-  setConfigFlags(FLAG_MSAA_4X_HINT)
+  setConfigFlags(FLAG_MSAA_4X_HINT or FLAG_WINDOW_HIDDEN)
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nimony v0.2,    <SPACE>:Start / Stop, <R>:Restart")
 
   let titleBarIcon = loadImage("../resources/ray.png")
@@ -108,6 +108,8 @@ proc main() =
   const BGM_START_POS = 16.0'f32
   seekMusicStream(bgm, BGM_START_POS)
   playMusicStream(bgm)
+
+  var delayShowWindow: int32 = 1 # For eliminating flicker at startup
 
   # Main loop
   while not windowShouldClose():
@@ -184,7 +186,12 @@ proc main() =
     endMode3D()
     endDrawing()
 
-#end while
+    if delayShowWindow == 0:
+      clearWindowState(FLAG_WINDOW_HIDDEN) #-- Show window
+    if delayShowWindow >= 0:
+      dec delayShowWindow
+
+  #end while
   closeWindow()
 
 #------

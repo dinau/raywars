@@ -11,7 +11,7 @@ const
   screenHeight = 400;
 
 var
-  text: array of string;
+  text: TStringList;
   textCount: Integer;
   scrollOffset: Single;
   scrollSpeed: Single;
@@ -28,9 +28,9 @@ var
   planeWidth, planeHeight: Single;
   alpha: Single;
 
-  lineList: TStringList;
   bgm: TMusic;
   titleBarIcon: TImage;
+  delayShowWindow: integer;
 
 const
   messageFile = '../../resources/message.txt';
@@ -40,7 +40,7 @@ const
 {$R *.res}
 
 begin
-  SetConfigFlags(FLAG_MSAA_4X_HINT);
+  SetConfigFlags(FLAG_MSAA_4X_HINT or FLAG_WINDOW_HIDDEN);
   InitWindow(screenWidth, screenHeight, 'Ray Wars Opening Crawl in Pascal,   <SPACE>:Start / Stop, <R>:Restart');
 
   titleBarIcon := LoadImage('./resources/ray.png');
@@ -48,26 +48,17 @@ begin
   UnloadImage(titleBarIcon);
 
   // Read text file
-  lineList := TStringList.Create;
-  try
-    if FileExists(messageFile) then
-    begin
-      lineList.LoadFromFile(messageFile);
-      textCount := lineList.Count;
-      SetLength(text, textCount);
-      for i := 0 to textCount - 1 do
-      begin
-        text[i] := lineList[i];
-      end;
-    end
-    else
-    begin
-      WriteLn('Error: File not found: ' + messageFile);
-      CloseWindow();
-      Exit;
-    end;
-  finally
-    lineList.Free;
+  text := TStringList.Create;
+  if FileExists(messageFile) then
+  begin
+    text.LoadFromFile(messageFile);
+    textCount := text.Count;
+  end
+  else
+  begin
+    WriteLn('Error: File not found: ' + messageFile);
+    CloseWindow();
+    Exit;
   end;
 
   scrollOffset := 0;
@@ -131,6 +122,7 @@ begin
   SeekMusicStream(bgm, BGM_START_POS);
   PlayMusicStream(bgm);
 
+  delayShowWindow := 1; // For eliminating flicker at startup
   while not WindowShouldClose() do
   begin
     UpdateMusicStream(bgm);
@@ -241,6 +233,11 @@ begin
 
     EndMode3D();
     EndDrawing();
+
+    if delayShowWindow = 0 then
+      ClearWindowState(FLAG_WINDOW_HIDDEN); // Show window
+    if delayShowWindow >= 0 then
+      dec(delayShowWindow);
   end;
 
   // Unload textures

@@ -10,7 +10,7 @@ local SCREEN_HEIGHT: int32 = 400
 --- main
 ---------
 local main = function()
-  rl.setConfigFlags(rl.configFlags.MSAA_4X_HINT)
+  rl.setConfigFlags(rl.configFlags.MSAA_4X_HINT | rl.configFlags.WINDOW_HIDDEN)
   rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nelua,    <SPACE>:Start / Stop, <R>:Restart")
 
   local title_bar_icon = rl.loadImage("./resources/ray.png")
@@ -87,12 +87,15 @@ local main = function()
   rl.seekMusicStream(bgm, BGM_START_POS)
   rl.playMusicStream(bgm)
 
+  local delayShowWindow: int32 = 1
+
   while not rl.windowShouldClose() do
     rl.updateMusicStream(bgm)
     -- Check for space key (pause/resume)
     if rl.isKeyPressed(rl.keyboardKey.SPACE) then
       paused = not paused
     end
+
 
     -- Check for R key (restart)
     if rl.isKeyPressed(rl.keyboardKey.R) then
@@ -190,8 +193,15 @@ local main = function()
     end
 
     rl.endMode3D()
-
     rl.endDrawing()
+
+    if delayShowWindow == 0 then
+        rl.clearWindowState(rl.configFlags.WINDOW_HIDDEN) -- Show window : PR is going to be issued.
+    end
+    if delayShowWindow >= 0 then
+        delayShowWindow = delayShowWindow - 1
+    end
+
   end
 
   -- Unload textures

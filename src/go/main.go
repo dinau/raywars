@@ -15,7 +15,7 @@ const (
 )
 
 func main() {
-	rl.SetConfigFlags(rl.FlagMsaa4xHint)
+	rl.SetConfigFlags(rl.FlagMsaa4xHint | rl.FlagWindowHidden)
 	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Go,   <SPACE>:Start / Stop, <R>:Restart")
 	defer rl.CloseWindow()
 
@@ -42,7 +42,7 @@ func main() {
 			panic(err)
 	}
 	rawLines := strings.Split(string(data), "\n")
-  textLines := make([]string, 0, len(rawLines))
+	textLines := make([]string, 0, len(rawLines))
 	for _, line := range rawLines {
 		line = strings.TrimRight(line, "\r\n")
 		// line = strings.TrimSpace(line)
@@ -109,6 +109,8 @@ func main() {
 	const BGM_START_POS = 16.0
 	rl.SeekMusicStream(bgm, BGM_START_POS)
 	rl.PlayMusicStream(bgm)
+
+    var delayShowWindow int32 = 1
 
 	for !rl.WindowShouldClose() {
 		rl.UpdateMusicStream(bgm)
@@ -203,6 +205,14 @@ func main() {
 
 		rl.EndMode3D()
 		rl.EndDrawing()
+
+		if delayShowWindow == 0 {
+			rl.ClearWindowState(rl.FlagWindowHidden) // Show window
+		}
+		if delayShowWindow >= 0 {
+			delayShowWindow -= 1
+		}
+
 	}
 
 	// Unload textures

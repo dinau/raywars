@@ -1,3 +1,4 @@
+.save/
 src/julia/
 src/rust/target/
 src/rust/Cargo.lock

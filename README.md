@@ -7,6 +7,7 @@
   - [Programs](#programs)
     - [C](#c)
     - [C3](#c3)
+    - [FreeBasic](#freebasic)
     - [Go](#go)
     - [Julia](#julia)
     - [Nelua](#nelua)
@@ -34,9 +35,9 @@
 
 ---
 
-Install `gcc, make, MSys2 console / commands(cp, rm ...)`
-
 Currently using Raylib v5.5 
+
+If you try to use except script language, install `gcc, make, MSys2 console / commands(cp, rm ...)`
 
 #### Download Raylib library [Only for C, Nimony, Nelua, Zig]
 
@@ -127,6 +128,48 @@ make run
 - https://c3-lang.org/language-overview/examples/
 - https://github.com/c3lang/vendor/tree/main/libraries
 
+##### FreeBasic
+
+---
+
+[FreeBASIC Compiler](https://freebasic.net/) - Version 1.10.1 (2023-12-24), built for win64 (64bit)
+
+1. Clone [raylib4fb](https://github.com/mudhairless/raylib4fb)
+
+   ```sh
+   cd your_work_dir/libs
+   git clone https://github.com/mudhairless/raylib4fb
+   ```
+
+1. Folder structure:
+
+     ```sh
+     your_work_dir
+      |-- raywars
+      |   `-- src
+      |       |-- c
+      |       |-- c3
+      |       |-- FreeBasic
+      |       snip
+      | 
+      `-- libs
+          `-- raylib4fb       <== For FreeBasic
+     ```
+
+1. Build and run
+
+   ```sh
+   pwd 
+   raywars/src/freebasic
+   ```
+   
+   windows
+   
+   ```sh
+   make run
+   ```
+
+
 ##### Go
 
 ---
@@ -148,7 +191,7 @@ make run
 
 ---
 
-WIP
+Work in progress
 
 Julia 1.12.2  
 Using https://github.com/imohag9/RaylibWrapper.jl  
@@ -192,7 +235,7 @@ make run
       |-- raywars
       |   `-- src
       |       |-- c
-      |       |-- luajit
+      |       |-- c3
       |       snip
       | 
       `-- libs
@@ -305,7 +348,6 @@ Using [odin version dev-2025-11 (-nightly:e5153a9)](https://github.com/odin-lang
          | 
          `-- libs
              |-- windows
-             |   |-- raylib    
              |   `-- raylib_msvc    <== for Odin
              `-- linux
                  `-- raylib   

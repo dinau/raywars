@@ -36,7 +36,7 @@ foreign raylib {
 RL_QUADS :: 7
 
 main :: proc() {
-    rl.SetConfigFlags({.MSAA_4X_HINT})
+    rl.SetConfigFlags({.MSAA_4X_HINT, .WINDOW_HIDDEN})
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Odin,   <SPACE>:Start / Stop, <R>:Restart")
     defer rl.CloseWindow()
 
@@ -134,6 +134,9 @@ main :: proc() {
     rl.SeekMusicStream(bgm, BGM_START_POS)
     rl.PlayMusicStream(bgm)
 
+
+    delayShowWindow: i32 = 1
+
     for !rl.WindowShouldClose() {
         rl.UpdateMusicStream(bgm)
         // Check for space key (pause/resume)
@@ -221,6 +224,14 @@ main :: proc() {
 
                 rlEnd()
                 rlSetTexture(0)
+
+                if delayShowWindow == 0 {
+                    rl.ClearWindowState({.WINDOW_HIDDEN}) // Show window
+                }
+                if delayShowWindow >= 0 {
+                    delayShowWindow -= 1
+                }
+
             }
         }
     }
