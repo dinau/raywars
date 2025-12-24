@@ -35,11 +35,9 @@
 
 ---
 
-Currently using Raylib v5.5 
-
 If you try to use except script language, install `gcc, make, MSys2 console / commands(cp, rm ...)`
 
-#### Download Raylib library [Only for C, Nimony, Nelua, Zig]
+#### Download Raylib library [Only for C, Nimony, Nelua]
 
 ---
 
@@ -395,7 +393,7 @@ python raywars.py      # or python3 raywars.py
 #####  Ruby 
 
 ---
-For Windows install [Ruby installer](https://rubyinstaller.org/downloads/):  Ruby 3.4.7  
+For Windows install [Ruby installer](https://rubyinstaller.org/downloads/):  Ruby 3.4.8  
 Linux: Ruby 3.3.8 
 
 ```sh

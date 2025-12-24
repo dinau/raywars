@@ -4,7 +4,7 @@ CC = gcc
 #CC = zig cc
 #CC = clang
 
-CFLAGS += -O3
+CFLAGS += -O0
 
 LIBS_DIR = ../../../libs
 

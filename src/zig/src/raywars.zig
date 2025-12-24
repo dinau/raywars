@@ -1,5 +1,6 @@
 const std = @import("std");
 const rl = @import("raylib");
+const rlgl = rl.gl;
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 400;
@@ -9,23 +10,23 @@ const STAR_COUNT = 100;
 
 pub fn main() !void {
 
-    rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT | rl.FLAG_WINDOW_HIDDEN);
-    rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Zig,   <SPACE>:Start / Stop, <R>:Restart");
+    rl.setConfigFlags(.{.msaa_4x_hint = true, .window_hidden = true});
+    rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Zig,   <SPACE>:Start / Stop, <R>:Restart");
 
-    const title_bar_icon = rl.LoadImage("./resources/ray.png");
-    rl.SetWindowIcon(title_bar_icon);
-    rl.UnloadImage(title_bar_icon);
+    const title_bar_icon = try rl.loadImage("./resources/ray.png");
+    rl.setWindowIcon(title_bar_icon);
+    rl.unloadImage(title_bar_icon);
 
     var stars: [STAR_COUNT]rl.Vector2 = undefined;
     var starSizes: [STAR_COUNT]f32 = undefined;
 
     // Generate random stars
     for (0..STAR_COUNT) |i| {
-        const rx = rl.GetRandomValue(0, SCREEN_WIDTH);
-        const ry = rl.GetRandomValue(0, SCREEN_HEIGHT);
+        const rx = rl.getRandomValue(0, SCREEN_WIDTH);
+        const ry = rl.getRandomValue(0, SCREEN_HEIGHT);
         stars[i].x = @as(f32, @floatFromInt(rx));
         stars[i].y = @as(f32, @floatFromInt(ry));
-        const rs = rl.GetRandomValue(5, 10);
+        const rs = rl.getRandomValue(5, 10);
         starSizes[i] = @as(f32, @floatFromInt(rs)) / 10.0;
     }
 
@@ -62,37 +63,38 @@ pub fn main() !void {
         if (line.len == 0) {
             textTextures[i] = rl.RenderTexture2D{
                 .id = 0,
-                .texture = rl.Texture2D{ .id = 0 },
-                .depth = rl.Texture2D{ .id = 0 },
+                .texture = rl.Texture2D{ .id = 0, .width = 0, .height = 0, .mipmaps = 0, .format = .uncompressed_grayscale },
+                .depth   = rl.Texture2D{ .id = 0, .width = 0, .height = 0, .mipmaps = 0, .format = .uncompressed_grayscale },
             };
             continue;
         }
 
         const fontSize: f32 = if (i == 0) BASE_FONT_SIZE * 2 else BASE_FONT_SIZE;
-        const textWidth = rl.MeasureText(line.ptr, @intFromFloat(fontSize));
+        const line_z: [:0]const u8 = line[0..line.len :0];
+        const textWidth = rl.measureText(line_z, @intFromFloat(fontSize));
         const textHeight = @as(c_int, @intFromFloat(fontSize + 10));
 
         if (textWidth <= 0 or textHeight <= 0) {
             textTextures[i] = rl.RenderTexture2D{
                 .id = 0,
-                .texture = rl.Texture2D{ .id = 0 },
-                .depth = rl.Texture2D{ .id = 0 },
+                .texture = rl.Texture2D{ .id = 0, .width = 0, .height = 0, .mipmaps = 0, .format = .uncompressed_grayscale },
+                .depth   = rl.Texture2D{ .id = 0, .width = 0, .height = 0, .mipmaps = 0, .format = .uncompressed_grayscale },
             };
             continue;
         }
 
-        const tex = rl.LoadRenderTexture(textWidth, textHeight);
-        rl.BeginTextureMode(tex);
-        rl.ClearBackground(rl.BLANK);
+        const tex = try rl.loadRenderTexture(textWidth, textHeight);
+        rl.beginTextureMode(tex);
+        rl.clearBackground(.blank);
 
-        const color = if (i == 0 or i == 2)
-            rl.YELLOW
+        const color: rl.Color = if (i == 0 or i == 2)
+            .yellow
         else
             rl.Color{ .r = 255, .g = 232, .b = 31, .a = 255 };
 
-        rl.DrawText(line.ptr, 0, 0, @intFromFloat(fontSize), color);
-        rl.EndTextureMode();
-        rl.SetTextureFilter(tex.texture, rl.TEXTURE_FILTER_BILINEAR);
+        rl.drawText(line_z, 0, 0, @intFromFloat(fontSize), color);
+        rl.endTextureMode();
+        rl.setTextureFilter(tex.texture, .bilinear);
         textTextures[i] = tex;
     }
 
@@ -101,60 +103,60 @@ pub fn main() !void {
         .target = rl.Vector3{ .x = 0, .y = 0, .z = -1 },
         .up = rl.Vector3{ .x = 0, .y = 1, .z = 0 },
         .fovy = 45.0,
-        .projection = rl.CAMERA_PERSPECTIVE,
+        .projection = .perspective,
     };
 
     var scrollOffset: f32 = 0.0;
     var paused: bool = false;
 
-    rl.SetTargetFPS(60);
+    rl.setTargetFPS(60);
 
-    rl.InitAudioDevice();
+    rl.initAudioDevice();
     //rl.SetMasterVolume(1.0);
     const bgm_name= "resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3";
-    const bgm = rl.LoadMusicStream(bgm_name);
+    const bgm = try rl.loadMusicStream(bgm_name);
     const BGM_START_POS = 16.0;
-    rl.SeekMusicStream(bgm, BGM_START_POS);
-    rl.PlayMusicStream(bgm);
+    rl.seekMusicStream(bgm, BGM_START_POS);
+    rl.playMusicStream(bgm);
 
     var delayShowWindow: i32 = 1;
 
-    while (!rl.WindowShouldClose()) {
-        rl.UpdateMusicStream(bgm);
+    while (!rl.windowShouldClose()) {
+        rl.updateMusicStream(bgm);
         // Check for space key (pause/resume)
-        if (rl.IsKeyPressed(rl.KEY_SPACE)){
+        if (rl.isKeyPressed(.space)){
             paused = ! paused;
         }
         // Check for R key (restart)
-        if (rl.IsKeyPressed(rl.KEY_R)) {
+        if (rl.isKeyPressed(.r)) {
           scrollOffset = 0.0;
           paused = false;
-          rl.SeekMusicStream(bgm, BGM_START_POS);
+          rl.seekMusicStream(bgm, BGM_START_POS);
         }
         // Update scroll position (only if not paused)
         if (!paused) {
-            scrollOffset += SCROLL_SPEED * rl.GetFrameTime();
-            rl.ResumeMusicStream(bgm);
+            scrollOffset += SCROLL_SPEED * rl.getFrameTime();
+            rl.resumeMusicStream(bgm);
         }else{
-            rl.PauseMusicStream(bgm);
+            rl.pauseMusicStream(bgm);
         }
         if (scrollOffset > @as(f32, @floatFromInt(textLines.items.len)) * 0.8 + 10.0)
             scrollOffset = 0.0;
 
-        rl.BeginDrawing();
-        rl.ClearBackground(rl.BLACK);
+        rl.beginDrawing();
+        rl.clearBackground(.black);
 
         // Draw stars
         for (0..STAR_COUNT) |i| {
-            rl.DrawCircle(
+            rl.drawCircle(
                 @intFromFloat(stars[i].x),
                 @intFromFloat(stars[i].y),
                 starSizes[i],
-                rl.WHITE,
+                .white,
             );
         }
 
-        rl.BeginMode3D(camera);
+        rl.beginMode3D(camera);
 
         for (textLines.items, 0..) |_, i| {
             if (textTextures[i].id == 0) continue;
@@ -164,12 +166,12 @@ pub fn main() !void {
             const lineOffset: f32 = scrollOffset - @as(f32, @floatFromInt(i)) * 0.55;
 
             if (lineOffset > -2.0 and lineOffset < 15.0) {
-                rl.rlPushMatrix();
+                rl.gl.rlPushMatrix();
 
                 const moveY = lineOffset * 0.866;
                 const moveZ = -lineOffset * 0.5;
-                rl.rlTranslatef(0.0, -3.0 + moveY, -5.0 + moveZ);
-                rl.rlRotatef(-70.0, 1.0, 0.0, 0.0);
+                rl.gl.rlTranslatef(0.0, -3.0 + moveY, -5.0 + moveZ);
+                rl.gl.rlRotatef(-70.0, 1.0, 0.0, 0.0);
 
                 const planeWidth = texWidth / 100.0;
                 const planeHeight = texHeight / 100.0;
@@ -182,30 +184,30 @@ pub fn main() !void {
                 if (alpha < 0.0) alpha = 0.0;
                 if (alpha > 1.0) alpha = 1.0;
 
-                rl.rlSetTexture(textTextures[i].texture.id);
-                rl.rlBegin(rl.RL_QUADS);
-                rl.rlColor4f(1.0, 1.0, 1.0, alpha);
+                rl.gl.rlSetTexture(textTextures[i].texture.id);
+                rl.gl.rlBegin(rl.gl.rl_quads);
+                rl.gl.rlColor4f(1.0, 1.0, 1.0, alpha);
 
-                rl.rlTexCoord2f(0.0, 0.0);
-                rl.rlVertex3f(-planeWidth / 2, 0.0, 0.0);
-                rl.rlTexCoord2f(1.0, 0.0);
-                rl.rlVertex3f(planeWidth / 2, 0.0, 0.0);
-                rl.rlTexCoord2f(1.0, 1.0);
-                rl.rlVertex3f(planeWidth / 2, planeHeight, 0.0);
-                rl.rlTexCoord2f(0.0, 1.0);
-                rl.rlVertex3f(-planeWidth / 2, planeHeight, 0.0);
+                rl.gl.rlTexCoord2f(0.0, 0.0);
+                rl.gl.rlVertex3f(-planeWidth / 2, 0.0, 0.0);
+                rl.gl.rlTexCoord2f(1.0, 0.0);
+                rl.gl.rlVertex3f(planeWidth / 2, 0.0, 0.0);
+                rl.gl.rlTexCoord2f(1.0, 1.0);
+                rl.gl.rlVertex3f(planeWidth / 2, planeHeight, 0.0);
+                rl.gl.rlTexCoord2f(0.0, 1.0);
+                rl.gl.rlVertex3f(-planeWidth / 2, planeHeight, 0.0);
 
-                rl.rlEnd();
-                rl.rlSetTexture(0);
-                rl.rlPopMatrix();
+                rl.gl.rlEnd();
+                rl.gl.rlSetTexture(0);
+                rl.gl.rlPopMatrix();
             }
         }
 
-        rl.EndMode3D();
-        rl.EndDrawing();
+        rl.endMode3D();
+        rl.endDrawing();
 
         if (delayShowWindow == 0) {
-            rl.ClearWindowState(rl.FLAG_WINDOW_HIDDEN);
+            rl.clearWindowState(rl.ConfigFlags { .window_hidden = true });
         }
         if (delayShowWindow >= 0) {
             delayShowWindow -= 1;
@@ -213,5 +215,5 @@ pub fn main() !void {
 
     }
 
-    rl.CloseWindow();
+    rl.closeWindow();
 }

@@ -5,7 +5,6 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const raylib = "raylib";
     const exe = b.addExecutable(.{
         .name = "raywars",
         .root_module = b.createModule(.{
@@ -13,13 +12,27 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
             .imports = &.{
-                .{.name = raylib, .module = b.lazyDependency(raylib, .{}).?.module(raylib)},
+             //   .{.name = raylib, .module = b.lazyDependency(raylib, .{}).?.module(raylib)},
             },
         }),
     });
 
     // for root_module
     exe.root_module.link_libc = true;
+
+
+    const raylib_dep = b.dependency("raylib_zig", .{
+        .target = target,
+        .optimize = optimize,
+    });
+    const raylib = raylib_dep.module("raylib"); // main raylib module
+    //const raygui = raylib_dep.module("raygui"); // raygui module
+    const raylib_artifact = raylib_dep.artifact("raylib"); // raylib C library
+    exe.linkLibrary(raylib_artifact);
+    exe.root_module.addImport("raylib", raylib);
+    //exe.root_module.addImport("raygui", raygui);
+
+
 
     // Add Icon to Windows exe file
     switch (builtin.target.os.tag) {
@@ -45,18 +58,6 @@ pub fn build(b: *std.Build) void {
     const res3 = b.addInstallFile(b.path("./resources/ray.png"), "bin/resources/ray.png");
     b.getInstallStep().dependOn(&res3.step);
 
-
-    // for Dynamic link
-    //switch (builtin.target.os.tag) {
-    //    .windows => {
-    //        const raylib_lib_win_dir = "../../../libs/win/raylib/lib";
-    //        const dll = "/raylib.dll";
-    //        const res = b.addInstallFile(b.path(raylib_lib_win_dir ++ dll), "bin" ++ dll);
-    //        b.getInstallStep().dependOn(&res.step);
-    //    },
-    //    .linux => {},
-    //    else => {},
-    //}
 
     const run_step = b.step("run", "Run the app");
     const run_cmd = b.addRunArtifact(exe);

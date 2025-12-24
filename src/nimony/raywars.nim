@@ -3,8 +3,9 @@
 import raylib_tiny
 import std/[syncio,strutils]
 
-#when defined(windows):
-#  include ./res/resource
+when defined(nim_compiler):
+  when defined(windows):
+    include ./res/resource
 
 proc rand*(): int32 {.cdecl,importc.}
 proc clamp(x, a, b:float32): float32 =
@@ -29,9 +30,15 @@ const
 var textLines: seq[string] = @[]
 var f:File
 var line:string
-if open(f, "../../../resources/message.txt"):
-  while readLine(f, line):
-    textLines.add(strip(line,chars={'\n','\r'}))
+
+when defined(nim_compiler):
+  if open(f, "../../resources/message.txt"):
+    while readLine(f, line):
+      textLines.add(strip(line,chars={'\n','\r'}))
+else:
+  if open(f, "../../../resources/message.txt"):
+    while readLine(f, line):
+      textLines.add(strip(line,chars={'\n','\r'}))
 
 #------
 # main
@@ -41,7 +48,11 @@ proc main() =
   setConfigFlags(FLAG_MSAA_4X_HINT or FLAG_WINDOW_HIDDEN)
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nimony v0.2,    <SPACE>:Start / Stop, <R>:Restart")
 
-  let titleBarIcon = loadImage("../resources/ray.png")
+  when defined(nim_compiler):
+    let titleBarIcon = loadImage("./resources/ray.png")
+  else:
+    let titleBarIcon = loadImage("../resources/ray.png")
+
   setWindowIcon(titleBarIcon)
   unloadImage(titleBarIcon)
 
@@ -70,8 +81,12 @@ proc main() =
       continue
 
     let fontSize = if i == 0: BASE_FONT_SIZE * 2 else: BASE_FONT_SIZE
-    var str = textLines[i]
-    let textWidth = measureText(str.toCString, fontSize)
+    when defined(nim_compiler):
+      var str = textLines[i].cstring
+    else:
+      var str = textLines[i].toCString
+
+    let textWidth = measureText(str, fontSize)
     let textHeight = (fontSize + 10).int32
 
     if textWidth <= 0 or textHeight <= 0:
@@ -82,8 +97,7 @@ proc main() =
     beginTextureMode(tex)
     clearBackground(BLANK)
     let color = if i == 0 or i == 2: YELLOW else: Color(r: 255, g: 232, b: 31, a: 255)
-    str = textLines[i]
-    drawText(str.toCString, 0, 0, fontSize.int32, color)
+    drawText(str, 0, 0, fontSize.int32, color)
     endTextureMode()
     setTextureFilter(tex.texture, TEXTURE_FILTER_BILINEAR)
     textTextures.add(tex)
@@ -103,7 +117,12 @@ proc main() =
   setTargetFPS(60)
   initAudioDevice()
   #setMasterVolume(1.0)
-  const bgm_name: cstring = "../../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+
+  when defined(nim_compiler):
+    const bgm_name: cstring = "../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+  else:
+    const bgm_name: cstring = "../../../resources/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30/Classicals.de - Strauss, Richard - Also sprach Zarathustra, Op.30.mp3"
+
   let bgm = loadMusicStream(bgm_name)
   const BGM_START_POS = 16.0'f32
   seekMusicStream(bgm, BGM_START_POS)

@@ -29,7 +29,7 @@ nimony:
 	$@ c $(OPT) $(TARGET).nim
 	@-strip ./nimcache/$(TARGET)$(EXE)
 
-nim:
+nim: clean
 	$@ c -d:nim_compiler --nimcache:.nimcache $(OPT) $(TARGET).nim
 
 clean:

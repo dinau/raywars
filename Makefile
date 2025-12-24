@@ -1,7 +1,7 @@
 EXAMPLE_DIRS := \
 								src/c \
 								src/c3 \
-								src/freebasic
+								src/freebasic \
 								src/go \
 								src/nelua \
 								src/nim \

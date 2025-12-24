@@ -11,7 +11,7 @@ const
   SCREEN_WIDTH = 800
   SCREEN_HEIGHT = 400
   BASE_FONT_SIZE = 60
-  SCROLL_SPEED = 0.465
+  SCROLL_SPEED = 0.47
   STAR_COUNT = 100
 
 # Text content
@@ -27,8 +27,8 @@ proc main() =
   setConfigFlags(flags(Msaa4xHint,WindowHidden))
   initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Ray Wars Opening Crawl in Nim,    <SPACE>:Start / Stop, <R>:Restart")
 
-  let title_bar_icon = loadImage("./resources/ray.png")
-  setWindowIcon(title_bar_icon)
+  let titleBarIcon = loadImage("./resources/ray.png")
+  setWindowIcon(titleBarIcon)
 
   # Generate random stars
   var
